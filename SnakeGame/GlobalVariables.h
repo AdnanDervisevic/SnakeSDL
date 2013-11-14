@@ -1,0 +1,10 @@
+#ifndef _GLOBALVARIABLES_H_
+#define _GLOBALVARIABLES_H_
+
+#define WINDOW_TITLE "Snake"
+
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+#define SCREEN_BPP 32
+
+#endif

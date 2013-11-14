@@ -1,100 +1,123 @@
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include <string>
+#include "SnakeGame.h"
 
-//prototypes of functions
-SDL_Surface *load_image( std::string filename );
-void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination );
-
-
-//screen attributes
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
-const int SCREEN_BPP = 32;
-
-// the surfaces that will be used
-SDL_Surface *message = NULL;
-SDL_Surface *background = NULL;
-SDL_Surface *screen = NULL;
-
-int main( int argc, char* args[] )
+// Creates a new Snake object.
+SnakeGame::SnakeGame()
 {
+	backbuffer = NULL;
+	spriteBatch = NULL;
+	running = true;
+}
 
-	//all of sdl init
-	if (SDL_Init ( SDL_INIT_EVERYTHING ) == -1)
-	{
-		return 1;
-	}
-
-	//set up the screen
-	screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
-
-	if(screen == NULL)
-	{
-		return 1;
-	}
-
-	SDL_WM_SetCaption( "Test Appen", NULL);
-
-	//load images
-	message = load_image("hello.png");
-	background = load_image("background.png");
-
-	//apply bg
-	apply_surface( 0, 0, background, screen);
-	apply_surface( 320, 0, background, screen);
-	apply_surface( 0, 240, background, screen);
-	apply_surface( 320, 240, background, screen);
-	
-	apply_surface(180,140,message,screen);
-
-	if(SDL_Flip(screen) == -1)
-	{
+// This method is called to run the game.
+int SnakeGame::Run()
+{
+	// Initialize the game.
+	if (Initialize() == false)
 		return -1;
+
+	SDL_Event event;
+
+	currentTicks = SDL_GetTicks();
+
+	// Run until you close the window.
+	while (running)
+	{
+		// Calculate the delta time since the last run.
+		oldTicks = currentTicks;
+		currentTicks = SDL_GetTicks();
+		float dt = (currentTicks - oldTicks) / 1000.0f;
+		
+		// Handle the SDL Input
+		while (SDL_PollEvent(&event))
+			HandleSDLInput(&event);
+
+		// Hand regular input.
+		HandleInput();
+
+		// Update and Draw the game.
+		Update(dt);
+		Draw(dt);
 	}
 
-	SDL_Delay(2000);
-
-	SDL_FreeSurface(message);
-	SDL_FreeSurface(background);
-
-	SDL_Quit();
+	// Clean up the variables.
+	Cleanup();
 
 	return 0;
 }
 
-SDL_Surface *load_image( std::string filename ) 
+// Here we Initialize our game.
+bool SnakeGame::Initialize()
 {
-	//temp storage for loaded image
-	SDL_Surface* loadedImage = NULL;
+	// Initialize the sdl.
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+		return false;
 
-	// the optmized image that will be used
-	SDL_Surface* optimizedImage = NULL;
+	// Create our display surface.
+	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL)
+		return false;
 
-	//loadImage
-	loadedImage = IMG_Load(filename.c_str());
+	// Create the spritebatch.
+	spriteBatch = new SpriteBatch(backbuffer);
 
-	if(loadedImage != NULL)
-	{
-		//create optimized image
-		optimizedImage = SDL_DisplayFormat(loadedImage);
+	// Change our window title
+	SDL_WM_SetCaption(WINDOW_TITLE, nullptr);
 
-		//freee old image
-		SDL_FreeSurface(loadedImage);
-	}
+	// Load the player texture.	
+	if (player.Initialize(Vector2(0, 0), Texture::Load("Assets/playerTexture.bmp")) == false)
+		return false;
 
-	return optimizedImage;
+	return true;
 }
 
-void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination )
+// Here we handle all the input coming from the SDL library.
+void SnakeGame::HandleSDLInput(SDL_Event* event)
 {
-	//temporary rectangle to hold offsets
-	SDL_Rect offset;
+	// Check if we want to quit
+	if (event->type == SDL_QUIT)
+		running = false;
+}
 
-	//give offsets to rect
-	offset.x = x;
-	offset.y = y;
+// Here we handle all the input not coming from the SDL.
+void SnakeGame::HandleInput()
+{
+}
 
-	//blit the surface
-	SDL_BlitSurface(source, NULL, destination, &offset);
+// Here we update our game.
+void SnakeGame::Update(float elapsedGameTime)
+{
+	player.Update(elapsedGameTime);
+}
+
+// Here we draw our game.
+void SnakeGame::Draw(float elapsedGameTime)
+{
+	// Clears the backbuffer.
+	SDL_FillRect(backbuffer, NULL, SDL_MapRGB(backbuffer->format, 0, 0, 0));
+
+	// Draws the player.
+	player.Draw(elapsedGameTime, this->spriteBatch);
+
+	// Shows the backbuffer.
+	SDL_Flip(backbuffer);
+}
+
+// Here we clean up and releases our resources.
+void SnakeGame::Cleanup()
+{
+	// Cleans up the players variables.
+	player.Cleanup();
+
+	// Clean up variables.
+	delete spriteBatch;
+	SDL_FreeSurface(backbuffer);
+	SDL_Quit();
+}
+
+// The main entry point of the program.
+int main(int argc, char* argv[])
+{
+	// Create the game and run it.
+	SnakeGame snake;
+
+	return snake.Run();
 }
