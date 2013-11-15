@@ -14,7 +14,7 @@ SpriteBatch::~SpriteBatch()
 }
 
 // Draw something onto the backbuffer.
-bool SpriteBatch::Draw(SDL_Surface* texture, Vector2& position)
+bool SpriteBatch::Draw(SDL_Surface* texture, Vector2 position)
 {
 	// If the backbuffer or texture is not set, return null.
 	if (this->backbuffer == NULL || texture == NULL)
@@ -31,7 +31,7 @@ bool SpriteBatch::Draw(SDL_Surface* texture, Vector2& position)
 }
 
 // Draw a part of something onto the backbuffer
-bool SpriteBatch::Draw(SDL_Surface* texture, Vector2& position, Rectangle sourceRect)
+bool SpriteBatch::Draw(SDL_Surface* texture, Vector2 position, Rectangle sourceRect)
 {
 	// If the backbuffer or texture is not set, return null.
 	if (this->backbuffer == NULL || texture == NULL)
@@ -48,7 +48,7 @@ bool SpriteBatch::Draw(SDL_Surface* texture, Vector2& position, Rectangle source
 }
 
 // Draw something onto the backbuffer.
-bool SpriteBatch::DrawString(char* text, Vector2& position, TTF_Font* font, Color& color)
+bool SpriteBatch::DrawString(char* text, Vector2 position, TTF_Font* font, Color color)
 {
 	// If the backbuffer or texture is not set, return null.
 	if (this->backbuffer == NULL || font == NULL)

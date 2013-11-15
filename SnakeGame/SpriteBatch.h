@@ -13,10 +13,10 @@ public:
 	SpriteBatch(SDL_Surface* backbuffer);
 	~SpriteBatch();
 	
-	bool Draw(SDL_Surface* texture, Vector2& position);
-	bool Draw(SDL_Surface* texture, Vector2& position, Rectangle sourceRect);
+	bool Draw(SDL_Surface* texture, Vector2 position);
+	bool Draw(SDL_Surface* texture, Vector2 position, Rectangle sourceRect);
 
-	bool DrawString(char* text, Vector2& position, TTF_Font* font, Color& color);
+	bool DrawString(char* text, Vector2 position, TTF_Font* font, Color color);
 
 private:
 	SDL_Surface* backbuffer;
