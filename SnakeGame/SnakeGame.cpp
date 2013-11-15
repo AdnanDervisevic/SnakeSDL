@@ -60,7 +60,7 @@ bool SnakeGame::Initialize()
 	spriteBatch = new SpriteBatch(backbuffer);
 
 	// Change our window title
-	SDL_WM_SetCaption(WINDOW_TITLE, nullptr);
+	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
 	// Load the player texture.	
 	if (player.Initialize(Vector2(0, 0), Texture::Load("Assets/playerTexture.bmp")) == false)
