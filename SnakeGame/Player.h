@@ -1,7 +1,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "SDL\SDL.h"
+#include "SDL/SDL.h"
 #include "Vector2.h"
 #include "IDrawableGameComponent.h"
 
