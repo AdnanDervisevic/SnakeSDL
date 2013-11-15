@@ -1,4 +1,5 @@
 #include "SnakeGame.h"
+#include <iostream>
 
 // Creates a new Snake object.
 SnakeGame::SnakeGame()
