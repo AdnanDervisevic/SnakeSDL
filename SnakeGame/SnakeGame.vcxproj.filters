@@ -19,6 +19,9 @@
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{af79b1b3-f5ea-46e7-afea-63627cd061f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\XNA">
+      <UniqueIdentifier>{af390576-b6a3-4011-94f0-059d2435a290}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDL\begin_code.h">
@@ -153,26 +156,32 @@
     <ClInclude Include="GlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteBatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rectangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IDrawableGameComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\XNA</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteBatch.h">
+      <Filter>Header Files\XNA</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\XNA</Filter>
+    </ClInclude>
     <ClInclude Include="Vector2.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\XNA</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFont.h">
+      <Filter>Header Files\XNA</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files\XNA</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawableGameComponent.h">
+      <Filter>Header Files\XNA</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -56,6 +56,9 @@ bool SnakeGame::Initialize()
 	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL)
 		return false;
 
+	if (TTF_Init() == -1)
+		return false;
+
 	// Create the spritebatch.
 	spriteBatch = new SpriteBatch(backbuffer);
 
@@ -64,6 +67,10 @@ bool SnakeGame::Initialize()
 
 	// Load the player texture.	
 	if (player.Initialize(Vector2(0, 0), Texture::Load("Assets/playerTexture.bmp")) == false)
+		return false;
+
+	// Loads a font using the SpriteFont helper.
+	if ((font = SpriteFont::Load("Assets/Lazy.ttf", 28)) == NULL)
 		return false;
 
 	return true;
@@ -96,6 +103,9 @@ void SnakeGame::Draw(float elapsedGameTime)
 
 	// Draws the player.
 	player.Draw(elapsedGameTime, this->spriteBatch);
+	
+	// Draw a test string using the loaded font.
+	spriteBatch->DrawString("Testar min spritefont LOL", Vector2(100, 100), font, Color(255, 255, 255));
 
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);

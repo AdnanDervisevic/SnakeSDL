@@ -3,10 +3,12 @@
 
 
 #include "SDL/SDL.h"
+#include "SDL/SDL_ttf.h"
 #include "GlobalVariables.h"
 #include "Texture.h"
 #include "SpriteBatch.h"
 #include "Player.h"
+#include "SpriteFont.h"
 
 class SnakeGame
 {
@@ -27,6 +29,8 @@ private:
 	bool running;
 	SDL_Surface* backbuffer;
 	SpriteBatch* spriteBatch;
+
+	TTF_Font* font;
 
 	Player player;
 
