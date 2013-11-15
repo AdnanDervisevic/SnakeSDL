@@ -1,3 +1,3 @@
 #!/bin/bash
 
-g++ -o SnakeGame Player.cpp SpriteBatch.cpp SnakeGame.cpp  -lSDL -lSDL_image -lSDL_ttf
+g++ -o Snake Player.cpp SpriteBatch.cpp SnakeGame.cpp  -lSDL -lSDL_image -lSDL_ttf
