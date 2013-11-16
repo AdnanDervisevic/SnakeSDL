@@ -148,7 +148,7 @@ void SnakeGame::Cleanup()
 
 	// Dispose the projectile sound effect.
 	proj->Dispose();
-	proj = NULL;
+	delete proj;
 
 	// Dispose the background music.
 	Music::Dispose();
