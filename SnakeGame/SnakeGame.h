@@ -9,6 +9,8 @@
 #include "SpriteBatch.h"
 #include "Player.h"
 #include "SpriteFont.h"
+#include "SoundEffect.h"
+#include "Music.h"
 
 class SnakeGame
 {
@@ -31,6 +33,7 @@ private:
 	SpriteBatch* spriteBatch;
 
 	TTF_Font* font;
+	SoundEffect* proj;
 
 	Player player;
 

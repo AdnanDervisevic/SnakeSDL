@@ -74,6 +74,30 @@ bool SnakeGame::Initialize()
 	if ((font = SpriteFont::Load("Assets/Lazy.ttf", 28)) == NULL)
 		return false;
 
+	// Open the mixer, this is needed to play any audio.
+	if (Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS))
+		return false;
+
+	// Load the sound effect.
+	if ((proj = SoundEffect::Load("Assets/proj.wav")) == NULL)
+		return false;
+
+	// Load the background music, music is static because you can only play one song at the time.
+	if ((Music::Load("Assets/background.ogg")) == false)
+		return false;
+
+	// Set the volume of the music to 10%
+	Music::Volume(10);
+
+	// Start the music and loop it.
+	Music::Play(true);
+
+	// Set the volume of the projectile effect.
+	proj->Volume(30);
+
+	// Start the sound effect and loop it.
+	proj->Play(true);
+
 	return true;
 }
 
@@ -118,7 +142,19 @@ void SnakeGame::Cleanup()
 	// Cleans up the players variables.
 	player.Cleanup();
 
+	// Close the font.
+	TTF_CloseFont(font);
+	font = NULL;
+
+	// Dispose the projectile sound effect.
+	proj->Dispose();
+	proj = NULL;
+
+	// Dispose the background music.
+	Music::Dispose();
+
 	// Clean up variables.
+	Mix_CloseAudio(); // Close the audio
 	delete spriteBatch;
 	SDL_FreeSurface(backbuffer);
 	SDL_Quit();

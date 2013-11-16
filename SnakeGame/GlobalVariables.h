@@ -7,4 +7,9 @@
 #define SCREEN_HEIGHT 720
 #define SCREEN_BPP 32
 
+#define AUDIO_RATE 22050
+#define AUDIO_FORMAT AUDIO_S16
+#define AUDIO_CHANNELS 2
+#define AUDIO_BUFFERS 4096
+
 #endif
