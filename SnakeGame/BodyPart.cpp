@@ -22,7 +22,7 @@ bool BodyPart::Initialize(Vector2 position, Vector2 motion, SDL_Surface* texture
 }
 
 // Updates the player.
-void BodyPart::Update(float elapsedGameTime, BodyPart& neighbor)
+void BodyPart::Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& rightNeighbor)
 {
 	if (targetMotion.X != -2 && targetMotion.Y != -2)
 	{
@@ -32,10 +32,10 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& neighbor)
 			{
 				this->motion = targetMotion;
 
-				if (position.X != neighbor.position.X || position.Y != neighbor.position.X)
+				if (position.X != rightNeighbor.position.X || position.Y != rightNeighbor.position.X)
 				{
-					neighbor.targetPosition = this->position;
-					neighbor.targetMotion = this->motion;
+					rightNeighbor.targetPosition = this->position;
+					rightNeighbor.targetMotion = this->motion;
 				}
 
 				this->targetMotion.X = -2;
@@ -50,10 +50,10 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& neighbor)
 			{
 				this->motion = targetMotion;
 				
-				if (position.X != neighbor.position.X || position.Y != neighbor.position.X)
+				if (position.X != rightNeighbor.position.X || position.Y != rightNeighbor.position.X)
 				{
-					neighbor.targetPosition = this->position;
-					neighbor.targetMotion = this->motion;
+					rightNeighbor.targetPosition = this->position;
+					rightNeighbor.targetMotion = this->motion;
 				}
 
 				this->targetMotion.X = -2;
@@ -68,6 +68,18 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& neighbor)
 	{
 		position.X += (this->motion.X * 120 * elapsedGameTime);
 		position.Y += (this->motion.Y * 120 * elapsedGameTime);
+	}
+
+	if (motion.X == leftNeighbor.motion.X && motion.Y == leftNeighbor.motion.Y)
+	{
+		if (position.X < leftNeighbor.position.X)
+			position.X = leftNeighbor.position.X - 20;
+		else if (position.X > leftNeighbor.position.X)
+			position.X = leftNeighbor.position.X + 20;
+		else if (position.Y < leftNeighbor.position.Y)
+			position.Y = leftNeighbor.position.Y - 20;
+		else if (position.Y > leftNeighbor.position.Y)
+			position.Y = leftNeighbor.position.Y + 20;
 	}
 
 	// Prevent the player from going off-screen.

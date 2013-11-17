@@ -12,7 +12,7 @@ public:
 	BodyPart();
 
 	bool Initialize(Vector2 position, Vector2 motion, SDL_Surface* texture);
-	void Update(float elapsedGameTime, BodyPart& neighbor);
+	void Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& rightNeighbor);
 	void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	void Cleanup();
 

@@ -47,10 +47,20 @@ void Player::Update(float elapsedGameTime)
 	// Updates all the body parts.
 	for (int i = 0; i < bodyParts.size(); i++)
 	{
-		if (i + 1 >= bodyParts.size())
-			bodyParts.at(i).Update(elapsedGameTime, bodyParts.at(i));
+		if (i - 1 >= 0 && i + 1 < bodyParts.size())
+		{
+			bodyParts.at(i).Update(elapsedGameTime, bodyParts.at(i - 1), bodyParts.at(i + 1));
+		}
+		else if (i + 1 < bodyParts.size())
+		{
+			bodyParts.at(i).Update(elapsedGameTime, bodyParts.at(i), bodyParts.at(i + 1));
+		}
+		else if (i - 1 >= 0)
+		{
+			bodyParts.at(i).Update(elapsedGameTime, bodyParts.at(i - 1), bodyParts.at(i));
+		}
 		else
-			bodyParts.at(i).Update(elapsedGameTime, bodyParts.at(i + 1));
+			bodyParts.at(i).Update(elapsedGameTime, bodyParts.at(i), bodyParts.at(i));
 	}
 }
 
