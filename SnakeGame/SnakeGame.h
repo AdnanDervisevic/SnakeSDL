@@ -1,7 +1,6 @@
 #ifndef _SNAKEGAME_H_
 #define _SNAKEGAME_H_
 
-
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
 #include "GlobalVariables.h"

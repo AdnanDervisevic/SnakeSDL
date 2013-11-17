@@ -69,35 +69,35 @@ void Player::Cleanup()
 	bodyParts.clear();
 }
 
-void Player::Turn(Direction direction)
+void Player::Turn(int direction)
 {
 	BodyPart& head = bodyParts.at(0);
 	BodyPart& body = bodyParts.at(1);
 
 	switch (direction)
 	{
-	case UP:
+	case DIRECTION_UP:
 		if (head.motion.Y != 1 && head.motion.X == body.motion.X && head.motion.Y == body.motion.Y)
 		{
 			head.targetPosition = head.position;
 			head.targetMotion = Vector2(0, -1);
 		}
 		break;
-	case DOWN:
+	case DIRECTION_DOWN:
 		if (head.motion.Y != -1 && head.motion.X == body.motion.X && head.motion.Y == body.motion.Y)
 		{
 			head.targetPosition = head.position;
 			head.targetMotion = Vector2(0, 1);
 		}
 		break;
-	case RIGHT:
+	case DIRECTION_RIGHT:
 		if (head.motion.X != -1 && head.motion.X == body.motion.X && head.motion.Y == body.motion.Y)
 		{
 			head.targetPosition = head.position;
 			head.targetMotion = Vector2(1, 0);
 		}
 		break;
-	case LEFT:
+	case DIRECTION_LEFT:
 		if (head.motion.X != 1 && head.motion.X == body.motion.X && head.motion.Y == body.motion.Y)
 		{
 			head.targetPosition = head.position;

@@ -6,7 +6,6 @@
 #include "IDrawableGameComponent.h"
 #include <vector>
 #include "BodyPart.h"
-#include "Enums.h"
 
 class Player : public IDrawableGameComponent
 {
@@ -19,7 +18,7 @@ public:
 	virtual void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	virtual void Cleanup();
 
-	void Turn(Direction direction);
+	void Turn(int direction);
 
 private:
 	std::vector<BodyPart> bodyParts;

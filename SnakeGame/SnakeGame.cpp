@@ -38,6 +38,8 @@ int SnakeGame::Run()
 		// Update and Draw the game.
 		Update(dt);
 		Draw(dt);
+
+		SDL_Delay(1);
 	}
 
 	// Clean up the variables.
@@ -113,13 +115,13 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 
 	case SDL_KEYDOWN:
 		if (event->key.keysym.sym == SDLK_w)
-			player.Turn(Direction::UP);
+			player.Turn(DIRECTION_UP);
 		else if (event->key.keysym.sym == SDLK_s)
-			player.Turn(Direction::DOWN);
+			player.Turn(DIRECTION_DOWN);
 		else if (event->key.keysym.sym == SDLK_d)
-			player.Turn(Direction::RIGHT);
+			player.Turn(DIRECTION_RIGHT);
 		else if (event->key.keysym.sym == SDLK_a)
-			player.Turn(Direction::LEFT);
+			player.Turn(DIRECTION_LEFT);
 		break;
 	}
 }

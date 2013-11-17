@@ -3,7 +3,7 @@
 
 #include "SDL/SDL.h"
 #include "Vector2.h"
-#include "Enums.h"
+#include "GlobalVariables.h"
 #include "SpriteBatch.h"
 
 class BodyPart

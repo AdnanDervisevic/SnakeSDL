@@ -12,4 +12,9 @@
 #define AUDIO_CHANNELS 2
 #define AUDIO_BUFFERS 4096
 
+#define DIRECTION_UP 0
+#define DIRECTION_DOWN 1
+#define DIRECTION_RIGHT 2
+#define DIRECTION_LEFT 3
+
 #endif
