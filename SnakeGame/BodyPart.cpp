@@ -1,5 +1,4 @@
 #include "BodyPart.h"
-#include <math.h>
 
 // Construct a new player at the position of 0, 0
 BodyPart::BodyPart()
@@ -8,7 +7,7 @@ BodyPart::BodyPart()
 }
 
 // Initialize the player.
-bool BodyPart::Initialize(Vector2 position, Vector2 motion, Vector2* targetPosition, Vector2* targetMotion, SDL_Surface* texture)
+bool BodyPart::Initialize(Vector2 position, Vector2 motion, SDL_Surface* texture)
 {
 	// If the texture is null return false.
 	if (texture == NULL)

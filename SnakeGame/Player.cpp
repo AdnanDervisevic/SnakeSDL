@@ -13,17 +13,17 @@ bool Player::Initialize(Vector2 position, SDL_Surface* headTexture, int headSize
 	// Set the position and texture.
 
 	BodyPart head;
-	if ((head.Initialize(position, Vector2(1, 0), NULL, NULL, headTexture)) == false)
+	if ((head.Initialize(position, Vector2(1, 0), headTexture)) == false)
 		return false;
 
 	BodyPart body;
 	Vector2 bodyPosition(position.X - headSize, position.Y);
-	if ((body.Initialize(bodyPosition, Vector2(1, 0), NULL, NULL, bodyTexture)) == false)
+	if ((body.Initialize(bodyPosition, Vector2(1, 0), bodyTexture)) == false)
 		return false;
 
 	BodyPart tail;
 	Vector2 tailPosition(bodyPosition.X - headSize, bodyPosition.Y);
-	if ((tail.Initialize(tailPosition, Vector2(1, 0), NULL, NULL, tailTexture)) == false)
+	if ((tail.Initialize(tailPosition, Vector2(1, 0), tailTexture)) == false)
 		return false;
 
 	this->bodyParts.push_back(head);

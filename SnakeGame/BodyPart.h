@@ -11,7 +11,7 @@ class BodyPart
 public:
 	BodyPart();
 
-	bool Initialize(Vector2 position, Vector2 motion, Vector2* targetPosition, Vector2* targetMotion, SDL_Surface* texture);
+	bool Initialize(Vector2 position, Vector2 motion, SDL_Surface* texture);
 	void Update(float elapsedGameTime, BodyPart& neighbor);
 	void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	void Cleanup();

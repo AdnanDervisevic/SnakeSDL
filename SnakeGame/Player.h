@@ -6,6 +6,7 @@
 #include "IDrawableGameComponent.h"
 #include <vector>
 #include "BodyPart.h"
+#include "Enums.h"
 
 class Player : public IDrawableGameComponent
 {

@@ -1,5 +1,4 @@
 #include "SpriteBatch.h"
-#include <math.h>
 
 // Creates a new Spritebatch with the given backbuffer.
 SpriteBatch::SpriteBatch(SDL_Surface* backbuffer)
