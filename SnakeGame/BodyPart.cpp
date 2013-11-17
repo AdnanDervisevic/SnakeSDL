@@ -30,6 +30,7 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& r
 		{
 			if ( (motion.X == 1 && position.X >= targetPosition.X) || (motion.X == -1 && position.X <= targetPosition.X) )
 			{
+				this->position.X = targetPosition.X;
 				this->motion = targetMotion;
 
 				if (position.X != rightNeighbor.position.X || position.Y != rightNeighbor.position.X)
@@ -48,6 +49,8 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& r
 		{
 			if ( (motion.Y == 1 && position.Y >= targetPosition.Y) || (motion.Y == -1 && position.Y <= targetPosition.Y) )
 			{
+				this->position.Y = targetPosition.Y;
+
 				this->motion = targetMotion;
 				
 				if (position.X != rightNeighbor.position.X || position.Y != rightNeighbor.position.X)
@@ -95,10 +98,6 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& r
 				position.X = leftNeighbor.position.X + 20;
 		}
 	}
-
-	// Prevent the player from going off-screen.
-	if (position.X > 1280 - 50)
-		position.X = -50;
 }
 
 // Draws the player.

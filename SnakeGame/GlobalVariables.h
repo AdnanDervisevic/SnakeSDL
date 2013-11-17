@@ -3,8 +3,8 @@
 
 #define WINDOW_TITLE "Snake"
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 #define SCREEN_BPP 32
 
 #define AUDIO_RATE 22050
