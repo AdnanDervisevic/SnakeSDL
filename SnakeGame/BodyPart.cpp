@@ -72,14 +72,28 @@ void BodyPart::Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& r
 
 	if (motion.X == leftNeighbor.motion.X && motion.Y == leftNeighbor.motion.Y)
 	{
-		if (position.X < leftNeighbor.position.X)
-			position.X = leftNeighbor.position.X - 20;
-		else if (position.X > leftNeighbor.position.X)
-			position.X = leftNeighbor.position.X + 20;
-		else if (position.Y < leftNeighbor.position.Y)
-			position.Y = leftNeighbor.position.Y - 20;
-		else if (position.Y > leftNeighbor.position.Y)
-			position.Y = leftNeighbor.position.Y + 20;
+		if (motion.X == 1 || motion.X == -1)
+		{
+			if (position.X < leftNeighbor.position.X)
+				position.X = leftNeighbor.position.X - 20;
+			else if (position.X > leftNeighbor.position.X)
+				position.X = leftNeighbor.position.X + 20;
+			else if (position.Y < leftNeighbor.position.Y)
+				position.Y = leftNeighbor.position.Y - 20;
+			else if (position.Y > leftNeighbor.position.Y)
+				position.Y = leftNeighbor.position.Y + 20;
+		}
+		else
+		{
+			if (position.Y < leftNeighbor.position.Y)
+				position.Y = leftNeighbor.position.Y - 20;
+			else if (position.Y > leftNeighbor.position.Y)
+				position.Y = leftNeighbor.position.Y + 20;
+			else if (position.X < leftNeighbor.position.X)
+				position.X = leftNeighbor.position.X - 20;
+			else if (position.X > leftNeighbor.position.X)
+				position.X = leftNeighbor.position.X + 20;
+		}
 	}
 
 	// Prevent the player from going off-screen.
