@@ -11,7 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BodyPart.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="GlobalVariables.h" />
     <ClInclude Include="IDrawableGameComponent.h" />
     <ClInclude Include="Player.h" />
@@ -68,6 +70,7 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BodyPart.cpp" />
     <ClCompile Include="Music.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SnakeGame.cpp" />

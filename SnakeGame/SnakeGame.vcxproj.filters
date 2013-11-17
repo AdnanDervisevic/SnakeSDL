@@ -189,6 +189,12 @@
     <ClInclude Include="Music.h">
       <Filter>Header Files\XNA</Filter>
     </ClInclude>
+    <ClInclude Include="BodyPart.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SnakeGame.cpp">
@@ -204,6 +210,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Music.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyPart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

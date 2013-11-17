@@ -67,7 +67,7 @@ bool SnakeGame::Initialize()
 	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
 	// Load the player texture.	
-	if (player.Initialize(Vector2(0, 0), Texture::Load("Assets/playerTexture.bmp")) == false)
+	if (player.Initialize(Vector2(200, 0), Texture::Load("Assets/playerTexture.png"), 20, Texture::Load("Assets/playerTexture.png"), 20, Texture::Load("Assets/playerTexture.png"), 20) == false)
 		return false;
 
 	// Loads a font using the SpriteFont helper.
@@ -105,8 +105,23 @@ bool SnakeGame::Initialize()
 void SnakeGame::HandleSDLInput(SDL_Event* event)
 {
 	// Check if we want to quit
-	if (event->type == SDL_QUIT)
+	switch (event->type)
+	{
+	case SDL_QUIT:
 		running = false;
+		break;
+
+	case SDL_KEYDOWN:
+		if (event->key.keysym.sym == SDLK_w)
+			player.Turn(Direction::UP);
+		else if (event->key.keysym.sym == SDLK_s)
+			player.Turn(Direction::DOWN);
+		else if (event->key.keysym.sym == SDLK_d)
+			player.Turn(Direction::RIGHT);
+		else if (event->key.keysym.sym == SDLK_a)
+			player.Turn(Direction::LEFT);
+		break;
+	}
 }
 
 // Here we handle all the input not coming from the SDL.
