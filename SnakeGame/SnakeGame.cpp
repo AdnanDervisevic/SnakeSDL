@@ -167,6 +167,16 @@ void SnakeGame::Draw(float elapsedGameTime)
 	// Draw a test string using the loaded font.
 	spriteBatch->DrawString("Testar min spritefont LOL", Vector2(100, 100), font, Color(255, 255, 255));
 
+	const char *js0,*js1, *js2, *js3, *joysticks;
+	js0 = SDL_JoystickName(0);
+	js1 = SDL_JoystickName(1);
+	js2 = SDL_JoystickName(2);
+	js3 = SDL_JoystickName(3);
+
+	joysticks = itoa(SDL_NumJoysticks());
+
+	spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
+
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);
 }
