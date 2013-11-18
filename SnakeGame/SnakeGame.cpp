@@ -100,6 +100,9 @@ bool SnakeGame::Initialize()
 	// Start the sound effect and loop it.
 	proj->Play(true);
 
+	if(SDL_NumJoysticks() < 1)
+		stick = SDL_JoystickOpen(0);
+            
 	return true;
 }
 
@@ -123,23 +126,20 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			else if (event->key.keysym.sym == SDLK_a)
 				player.Turn(DIRECTION_LEFT);
 			break;
-           
-		if(SDL_NumJoysticks() < 1)
+           		
+			
+		if(stick != NULL)
 		{
-		stick = SDL_JoystickOpen(0);
-            
-		if(stick == NULL)
-			break;
-		case SDL_JOYHATMOTION:
-			if(SDL_HAT_UP)
-				player.Turn(DIRECTION_UP);
-			else if(SDL_HAT_DOWN)
-				player.Turn(DIRECTION_DOWN);
-			else if(SDL_HAT_LEFT)
-				player.Turn(DIRECTION_LEFT);
-			else if(SDL_HAT_RIGHT)
-				player.Turn(DIRECTION_RIGHT);
-			break;
+			case SDL_JOYHATMOTION:
+				if(SDL_HAT_UP)
+					player.Turn(DIRECTION_UP);
+				else if(SDL_HAT_DOWN)
+					player.Turn(DIRECTION_DOWN);
+				else if(SDL_HAT_LEFT)
+					player.Turn(DIRECTION_LEFT);
+				else if(SDL_HAT_RIGHT)
+					player.Turn(DIRECTION_RIGHT);
+				break;
 		}
 	}
 }
@@ -177,11 +177,16 @@ void SnakeGame::Draw(float elapsedGameTime)
 
 
 	joysticks = buffert.c_str();
-	spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
-	spriteBatch->DrawString(js1, Vector2(150,120), font, Color(255,255,255));
-	spriteBatch->DrawString(js2, Vector2(150,140), font, Color(255,255,255));
-	spriteBatch->DrawString(js3, Vector2(150,160), font, Color(255,255,255));
-	spriteBatch->DrawString(joysticks, Vector2(150,180), font, Color(255,255,255));
+	if(js0 != NULL)
+		spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
+	if(js1 != NULL)
+		spriteBatch->DrawString(js1, Vector2(150,120), font, Color(255,255,255));
+	if(js2 != NULL)	
+		spriteBatch->DrawString(js2, Vector2(150,140), font, Color(255,255,255));
+	if(js3 != NULL)
+		spriteBatch->DrawString(js3, Vector2(150,160), font, Color(255,255,255));
+	if(joysticks != NULL)
+		spriteBatch->DrawString(joysticks, Vector2(150,180), font, Color(255,255,255));
 
 
 	// Shows the backbuffer.
@@ -207,7 +212,6 @@ void SnakeGame::Cleanup()
 
 	//CLOSE JOYSTICK
 	SDL_JoystickClose(stick);
-
 
 	// Clean up variables.
 	Mix_CloseAudio(); // Close the audio
