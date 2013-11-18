@@ -16,13 +16,15 @@ public:
 	void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	void Cleanup();
 
-	SDL_Surface* texture;
+	SDL_Surface* Texture;
 
-	Vector2 position;
-	Vector2 targetPosition;
+	Vector2 Position;
+	Vector2 TargetPosition;
 
-	Vector2 motion;
-	Vector2 targetMotion;
+	Vector2 Motion;
+	Vector2 TargetMotion;
+
+	Rectangle BoundingBox;
 };
 
 #endif

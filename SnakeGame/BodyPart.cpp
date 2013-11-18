@@ -2,7 +2,7 @@
 
 // Construct a new player at the position of 0, 0
 BodyPart::BodyPart()
-	: position(0, 0), motion(0, 0), targetPosition(-2, -2), targetMotion(-2, -2)
+	: Position(0, 0), Motion(0, 0), TargetPosition(-2, -2), TargetMotion(-2, -2), BoundingBox(0, 0, 10, 10)
 { 
 }
 
@@ -14,9 +14,12 @@ bool BodyPart::Initialize(Vector2 position, Vector2 motion, SDL_Surface* texture
 		return false;
 
 	// Set the position and texture.
-	this->position = position;
-	this->motion = motion;
-	this->texture = texture;
+	this->Position = position;
+	this->Motion = motion;
+	this->Texture = texture;
+
+	this->BoundingBox.x = static_cast<int>(position.X) + 5;
+	this->BoundingBox.y = static_cast<int>(position.Y) + 5;
 
 	return true;
 }
@@ -24,92 +27,95 @@ bool BodyPart::Initialize(Vector2 position, Vector2 motion, SDL_Surface* texture
 // Updates the player.
 void BodyPart::Update(float elapsedGameTime, BodyPart& leftNeighbor, BodyPart& rightNeighbor)
 {
-	if (targetMotion.X != -2 && targetMotion.Y != -2)
+	if (TargetMotion.X != -2 && TargetMotion.Y != -2)
 	{
-		if (targetMotion.Y == 1 || targetMotion.Y == -1)
+		if (TargetMotion.Y == 1 || TargetMotion.Y == -1)
 		{
-			if ( (motion.X == 1 && position.X >= targetPosition.X) || (motion.X == -1 && position.X <= targetPosition.X) )
+			if ( (Motion.X == 1 && Position.X >= TargetPosition.X) || (Motion.X == -1 && Position.X <= TargetPosition.X) )
 			{
-				this->position.X = targetPosition.X;
-				this->motion = targetMotion;
+				this->Position.X = TargetPosition.X;
+				this->Motion = TargetMotion;
 
-				if (position.X != rightNeighbor.position.X || position.Y != rightNeighbor.position.X)
+				if (Position.X != rightNeighbor.Position.X || Position.Y != rightNeighbor.Position.X)
 				{
-					rightNeighbor.targetPosition = this->position;
-					rightNeighbor.targetMotion = this->motion;
+					rightNeighbor.TargetPosition = this->Position;
+					rightNeighbor.TargetMotion = this->Motion;
 				}
 
-				this->targetMotion.X = -2;
-				this->targetMotion.Y = -2;
-				this->targetPosition.X = -2;
-				this->targetPosition.Y = -2;
+				this->TargetMotion.X = -2;
+				this->TargetMotion.Y = -2;
+				this->TargetPosition.X = -2;
+				this->TargetPosition.Y = -2;
 			}
 		}
-		else if (targetMotion.X == 1 || targetMotion.X == -1)
+		else if (TargetMotion.X == 1 || TargetMotion.X == -1)
 		{
-			if ( (motion.Y == 1 && position.Y >= targetPosition.Y) || (motion.Y == -1 && position.Y <= targetPosition.Y) )
+			if ( (Motion.Y == 1 && Position.Y >= TargetPosition.Y) || (Motion.Y == -1 && Position.Y <= TargetPosition.Y) )
 			{
-				this->position.Y = targetPosition.Y;
+				this->Position.Y = TargetPosition.Y;
 
-				this->motion = targetMotion;
+				this->Motion = TargetMotion;
 				
-				if (position.X != rightNeighbor.position.X || position.Y != rightNeighbor.position.X)
+				if (Position.X != rightNeighbor.Position.X || Position.Y != rightNeighbor.Position.X)
 				{
-					rightNeighbor.targetPosition = this->position;
-					rightNeighbor.targetMotion = this->motion;
+					rightNeighbor.TargetPosition = this->Position;
+					rightNeighbor.TargetMotion = this->Motion;
 				}
 
-				this->targetMotion.X = -2;
-				this->targetMotion.Y = -2;
-				this->targetPosition.X = -2;
-				this->targetPosition.Y = -2;
+				this->TargetMotion.X = -2;
+				this->TargetMotion.Y = -2;
+				this->TargetPosition.X = -2;
+				this->TargetPosition.Y = -2;
 			}
 		}
 	}
 
-	if (motion.X >= -1 && motion.Y >= -1)
+	if (Motion.X >= -1 && Motion.Y >= -1)
 	{
-		position.X += (this->motion.X * 120 * elapsedGameTime);
-		position.Y += (this->motion.Y * 120 * elapsedGameTime);
+		Position.X += (this->Motion.X * 120 * elapsedGameTime);
+		Position.Y += (this->Motion.Y * 120 * elapsedGameTime);
 	}
 
-	if (motion.X == leftNeighbor.motion.X && motion.Y == leftNeighbor.motion.Y)
+	if (Motion.X == leftNeighbor.Motion.X && Motion.Y == leftNeighbor.Motion.Y)
 	{
-		if (motion.X == 1 || motion.X == -1)
+		if (Motion.X == 1 || Motion.X == -1)
 		{
-			if (position.X < leftNeighbor.position.X)
-				position.X = leftNeighbor.position.X - 20;
-			else if (position.X > leftNeighbor.position.X)
-				position.X = leftNeighbor.position.X + 20;
-			else if (position.Y < leftNeighbor.position.Y)
-				position.Y = leftNeighbor.position.Y - 20;
-			else if (position.Y > leftNeighbor.position.Y)
-				position.Y = leftNeighbor.position.Y + 20;
+			if (Position.X < leftNeighbor.Position.X)
+				Position.X = leftNeighbor.Position.X - 20;
+			else if (Position.X > leftNeighbor.Position.X)
+				Position.X = leftNeighbor.Position.X + 20;
+			else if (Position.Y < leftNeighbor.Position.Y)
+				Position.Y = leftNeighbor.Position.Y - 20;
+			else if (Position.Y > leftNeighbor.Position.Y)
+				Position.Y = leftNeighbor.Position.Y + 20;
 		}
 		else
 		{
-			if (position.Y < leftNeighbor.position.Y)
-				position.Y = leftNeighbor.position.Y - 20;
-			else if (position.Y > leftNeighbor.position.Y)
-				position.Y = leftNeighbor.position.Y + 20;
-			else if (position.X < leftNeighbor.position.X)
-				position.X = leftNeighbor.position.X - 20;
-			else if (position.X > leftNeighbor.position.X)
-				position.X = leftNeighbor.position.X + 20;
+			if (Position.Y < leftNeighbor.Position.Y)
+				Position.Y = leftNeighbor.Position.Y - 20;
+			else if (Position.Y > leftNeighbor.Position.Y)
+				Position.Y = leftNeighbor.Position.Y + 20;
+			else if (Position.X < leftNeighbor.Position.X)
+				Position.X = leftNeighbor.Position.X - 20;
+			else if (Position.X > leftNeighbor.Position.X)
+				Position.X = leftNeighbor.Position.X + 20;
 		}
 	}
+
+	this->BoundingBox.x = static_cast<int>(Position.X) + 5;
+	this->BoundingBox.y = static_cast<int>(Position.Y) + 5;
 }
 
 // Draws the player.
 void BodyPart::Draw(float elapsedGameTime, SpriteBatch* spriteBatch)
 {
 	// Draws the players sprite.
-	spriteBatch->Draw(this->texture, this->position, Rectangle(0, 0, 20, 20));
+	spriteBatch->Draw(this->Texture, this->Position, Rectangle(0, 0, 20, 20));
 }
 
 // Cleans up all the variables.
 void BodyPart::Cleanup()
 {
 	// Free up the texture surface.
-	SDL_FreeSurface(this->texture);
+	SDL_FreeSurface(this->Texture);
 }

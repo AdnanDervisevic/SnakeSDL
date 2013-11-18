@@ -18,10 +18,19 @@ public:
 	virtual void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	virtual void Cleanup();
 
+	bool Collides(const Player& player);
+
 	void Turn(int direction);
+	void AddBodyPart();
+
+	bool IsAlive() { return alive; }
+
+	int Roll(int min, int max);
 
 private:
 	std::vector<BodyPart> bodyParts;
+	SDL_Surface* bodyTexture;
+	bool alive;
 };
 
 #endif
