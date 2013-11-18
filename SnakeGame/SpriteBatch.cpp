@@ -48,7 +48,7 @@ bool SpriteBatch::Draw(SDL_Surface* texture, Vector2 position, Rectangle sourceR
 }
 
 // Draw something onto the backbuffer.
-bool SpriteBatch::DrawString(char* text, Vector2 position, TTF_Font* font, Color color)
+bool SpriteBatch::DrawString(const char* text, Vector2 position, TTF_Font* font, Color color)
 {
 	// If the backbuffer or texture is not set, return null.
 	if (this->backbuffer == NULL || font == NULL)

@@ -36,6 +36,8 @@ private:
 
 	Player player;
 
+	SDL_Joystick *stick;
+
 };
 
 #endif
