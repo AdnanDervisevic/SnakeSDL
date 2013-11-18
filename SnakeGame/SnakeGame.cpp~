@@ -124,7 +124,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			        player.Turn(DIRECTION_LEFT);
 		        break;
            
-            if(SDL_NumJoysticks() < 1)
+            if(SDL_GetNumberOfJoysticks < 1)
             {
             
             stick = SDL_JoystickOpen(0);
@@ -196,8 +196,6 @@ void SnakeGame::Cleanup()
 	delete spriteBatch;
 	SDL_FreeSurface(backbuffer);
 	SDL_Quit();
-
-    SDL_JoystickClose(stick)
 }
 
 // The main entry point of the program.
