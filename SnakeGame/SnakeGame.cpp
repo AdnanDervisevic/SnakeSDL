@@ -109,41 +109,38 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	// Check if we want to quit
 	switch (event->type)
 	{
-	    case SDL_QUIT:
-		    running = false;
-		    break;
+		case SDL_QUIT:
+			running = false;
+			break;
       
-            case SDL_KEYDOWN:
-		        if (event->key.keysym.sym == SDLK_w)
-			        player.Turn(DIRECTION_UP);
-		        else if (event->key.keysym.sym == SDLK_s)
-			        player.Turn(DIRECTION_DOWN);
-		        else if (event->key.keysym.sym == SDLK_d)
-			        player.Turn(DIRECTION_RIGHT);
-		        else if (event->key.keysym.sym == SDLK_a)
-			        player.Turn(DIRECTION_LEFT);
-		        break;
+		case SDL_KEYDOWN:
+			if (event->key.keysym.sym == SDLK_w)
+				player.Turn(DIRECTION_UP);
+			else if (event->key.keysym.sym == SDLK_s)
+				player.Turn(DIRECTION_DOWN);
+			else if (event->key.keysym.sym == SDLK_d)
+				player.Turn(DIRECTION_RIGHT);
+			else if (event->key.keysym.sym == SDLK_a)
+				player.Turn(DIRECTION_LEFT);
+			break;
            
-            if(SDL_NumJoysticks() < 1)
-            {
+		if(SDL_NumJoysticks() < 1)
+		{
+		stick = SDL_JoystickOpen(0);
             
-            stick = SDL_JoystickOpen(0);
-            
-            if(stick == null)
-                break;
-            
-            case(SDL_JoyHatEvent)
-                if(event->SDL_HAT_UP)
-                    player.Turn(DIRECTION_UP);
-                else if(event->SDL_HAT_DOWN)
-                    player.Turn(DIRECTION_DOWN);
-                else if(event->SDL_HAT_LEFT);
-                    player.Turn(DIRECTION_LEFT);
-                else if(event->SDL_HAT_RIGHT)
-                    player.Turn(DIRECTION_RIGHT);
-                break;
-            }
-        }
+		if(stick == NULL)
+			break;
+		case SDL_JOYHATMOTION:
+			if(SDL_HAT_UP)
+				player.Turn(DIRECTION_UP);
+			else if(SDL_HAT_DOWN)
+				player.Turn(DIRECTION_DOWN);
+			else if(SDL_HAT_LEFT)
+				player.Turn(DIRECTION_LEFT);
+			else if(SDL_HAT_RIGHT)
+				player.Turn(DIRECTION_RIGHT);
+			break;
+		}
 	}
 }
 
@@ -191,13 +188,15 @@ void SnakeGame::Cleanup()
 	// Dispose the background music.
 	Music::Dispose();
 
+	//CLOSE JOYSTICK
+	SDL_JoystickClose(stick);
+
+
 	// Clean up variables.
 	Mix_CloseAudio(); // Close the audio
 	delete spriteBatch;
 	SDL_FreeSurface(backbuffer);
 	SDL_Quit();
-
-    SDL_JoystickClose(stick)
 }
 
 // The main entry point of the program.
