@@ -100,9 +100,9 @@ bool SnakeGame::Initialize()
 	// Start the sound effect and loop it.
 	proj->Play(true);
 
-	if(SDL_NumJoysticks() < 1)
+	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
-            
+        
 	return true;
 }
 
@@ -164,30 +164,16 @@ void SnakeGame::Draw(float elapsedGameTime)
 	// Draws the player.
 	player.Draw(elapsedGameTime, this->spriteBatch);
 	
-	// Draw a test string using the loaded font.
-	spriteBatch->DrawString("Testar min spritefont LOL", Vector2(100, 100), font, Color(255, 255, 255));
-
 	std::string buffert;
 
 	const char *js0,*js1, *js2, *js3, *joysticks;
 	js0 = SDL_JoystickName(0);
-	js1 = SDL_JoystickName(1);
-	js2 = SDL_JoystickName(2);
-	js3 = SDL_JoystickName(3);
-
-
 	joysticks = buffert.c_str();
+
 	if(js0 != NULL)
 		spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
-	if(js1 != NULL)
-		spriteBatch->DrawString(js1, Vector2(150,120), font, Color(255,255,255));
-	if(js2 != NULL)	
-		spriteBatch->DrawString(js2, Vector2(150,140), font, Color(255,255,255));
-	if(js3 != NULL)
-		spriteBatch->DrawString(js3, Vector2(150,160), font, Color(255,255,255));
 	if(joysticks != NULL)
 		spriteBatch->DrawString(joysticks, Vector2(150,180), font, Color(255,255,255));
-
 
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);

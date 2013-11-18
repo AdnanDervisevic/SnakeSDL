@@ -100,6 +100,9 @@ bool SnakeGame::Initialize()
 	// Start the sound effect and loop it.
 	proj->Play(true);
 
+	if(SDL_NumJoysticks() != 0)
+		stick = SDL_JoystickOpen(0);
+        
 	return true;
 }
 
@@ -109,41 +112,35 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	// Check if we want to quit
 	switch (event->type)
 	{
-	    case SDL_QUIT:
-		    running = false;
-		    break;
+		case SDL_QUIT:
+			running = false;
+			break;
       
-            case SDL_KEYDOWN:
-		        if (event->key.keysym.sym == SDLK_w)
-			        player.Turn(DIRECTION_UP);
-		        else if (event->key.keysym.sym == SDLK_s)
-			        player.Turn(DIRECTION_DOWN);
-		        else if (event->key.keysym.sym == SDLK_d)
-			        player.Turn(DIRECTION_RIGHT);
-		        else if (event->key.keysym.sym == SDLK_a)
-			        player.Turn(DIRECTION_LEFT);
-		        break;
-           
-            if(SDL_GetNumberOfJoysticks < 1)
-            {
-            
-            stick = SDL_JoystickOpen(0);
-            
-            if(stick == null)
-                break;
-            
-            case(SDL_JoyHatEvent)
-                if(event->SDL_HAT_UP)
-                    player.Turn(DIRECTION_UP);
-                else if(event->SDL_HAT_DOWN)
-                    player.Turn(DIRECTION_DOWN);
-                else if(event->SDL_HAT_LEFT);
-                    player.Turn(DIRECTION_LEFT);
-                else if(event->SDL_HAT_RIGHT)
-                    player.Turn(DIRECTION_RIGHT);
-                break;
-            }
-        }
+		case SDL_KEYDOWN:
+			if (event->key.keysym.sym == SDLK_w)
+				player.Turn(DIRECTION_UP);
+			else if (event->key.keysym.sym == SDLK_s)
+				player.Turn(DIRECTION_DOWN);
+			else if (event->key.keysym.sym == SDLK_d)
+				player.Turn(DIRECTION_RIGHT);
+			else if (event->key.keysym.sym == SDLK_a)
+				player.Turn(DIRECTION_LEFT);
+			break;
+           		
+			
+		if(stick != NULL)
+		{
+			case SDL_JOYHATMOTION:
+				if(SDL_HAT_UP)
+					player.Turn(DIRECTION_UP);
+				else if(SDL_HAT_DOWN)
+					player.Turn(DIRECTION_DOWN);
+				else if(SDL_HAT_LEFT)
+					player.Turn(DIRECTION_LEFT);
+				else if(SDL_HAT_RIGHT)
+					player.Turn(DIRECTION_RIGHT);
+				break;
+		}
 	}
 }
 
@@ -167,8 +164,22 @@ void SnakeGame::Draw(float elapsedGameTime)
 	// Draws the player.
 	player.Draw(elapsedGameTime, this->spriteBatch);
 	
-	// Draw a test string using the loaded font.
-	spriteBatch->DrawString("Testar min spritefont LOL", Vector2(100, 100), font, Color(255, 255, 255));
+	std::string buffert;
+
+	const char *js0,*js1, *js2, *js3, *joysticks;
+	js0 = SDL_JoystickName(0);
+	joysticks = buffert.c_str();
+
+	if(js0 != NULL)
+		spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
+	if(js1 != NULL)
+		spriteBatch->DrawString(js1, Vector2(350,120), font, Color(255,255,255));
+	if(js2 != NULL)	
+		spriteBatch->DrawString(js2, Vector2(450,140), font, Color(255,255,255));
+	if(js3 != NULL)
+		spriteBatch->DrawString(js3, Vector2(550,160), font, Color(255,255,255));
+	if(joysticks != NULL)
+		spriteBatch->DrawString(joysticks, Vector2(150,180), font, Color(255,255,255));
 
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);
@@ -190,6 +201,9 @@ void SnakeGame::Cleanup()
 
 	// Dispose the background music.
 	Music::Dispose();
+
+	//CLOSE JOYSTICK
+	SDL_JoystickClose(stick);
 
 	// Clean up variables.
 	Mix_CloseAudio(); // Close the audio
