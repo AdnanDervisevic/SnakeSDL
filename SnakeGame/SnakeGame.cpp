@@ -116,6 +116,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			running = false;
 			break;
       
+		// Om inte joystick är kopplad -- debugging
 		case SDL_KEYDOWN:
 			if (event->key.keysym.sym == SDLK_w)
 				player.Turn(DIRECTION_UP);
@@ -127,17 +128,17 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 				player.Turn(DIRECTION_LEFT);
 			break;
            		
-			
+		// Access the hat movement - For arcade stick connected via USB, one of the movement options
 		if(stick != NULL)
 		{
 			case SDL_JOYHATMOTION:
-				if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_UP)
+				if(SDL_JoystickGetHat(stick, 0) == 0x01)
 					player.Turn(DIRECTION_UP);
-				else if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_DOWN)
+				else if(SDL_JoystickGetHat(stick, 0) == 0x04)
 					player.Turn(DIRECTION_DOWN);
-				else if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_LEFT)
+				else if(SDL_JoystickGetHat(stick, 0) == 0x08 || SDL_JoystickGetHat(stick, 0) == (0x08|0x04) || SDL_JoystickGetHat(stick, 0) == (0x08|0x01))
 					player.Turn(DIRECTION_LEFT);
-				else if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_RIGHT)
+				else if(SDL_JoystickGetHat(stick, 0) == 0x02 || SDL_JoystickGetHat(stick, 0) == (0x02|0x04) || SDL_JoystickGetHat(stick, 0) == (0x02|0x01))
 					player.Turn(DIRECTION_RIGHT);
 				break;
 		}
@@ -163,12 +164,6 @@ void SnakeGame::Draw(float elapsedGameTime)
 
 	// Draws the player.
 	player.Draw(elapsedGameTime, this->spriteBatch);
-	
-	const char *js0;
-	js0 = SDL_JoystickName(0);
-
-	if(js0 != NULL)
-		spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
 
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);
