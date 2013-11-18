@@ -131,13 +131,13 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 		if(stick != NULL)
 		{
 			case SDL_JOYHATMOTION:
-				if(SDL_HAT_UP)
+				if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_UP)
 					player.Turn(DIRECTION_UP);
-				else if(SDL_HAT_DOWN)
+				else if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_DOWN)
 					player.Turn(DIRECTION_DOWN);
-				else if(SDL_HAT_LEFT)
+				else if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_LEFT)
 					player.Turn(DIRECTION_LEFT);
-				else if(SDL_HAT_RIGHT)
+				else if(SDL_JoystickGetHat(stick, 0) == SDL_HAT_RIGHT)
 					player.Turn(DIRECTION_RIGHT);
 				break;
 		}
@@ -164,16 +164,11 @@ void SnakeGame::Draw(float elapsedGameTime)
 	// Draws the player.
 	player.Draw(elapsedGameTime, this->spriteBatch);
 	
-	std::string buffert;
-
-	const char *js0,*js1, *js2, *js3, *joysticks;
+	const char *js0;
 	js0 = SDL_JoystickName(0);
-	joysticks = buffert.c_str();
 
 	if(js0 != NULL)
 		spriteBatch->DrawString(js0, Vector2(150,100), font, Color(255,255,255));
-	if(joysticks != NULL)
-		spriteBatch->DrawString(joysticks, Vector2(150,180), font, Color(255,255,255));
 
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);
@@ -197,7 +192,8 @@ void SnakeGame::Cleanup()
 	Music::Dispose();
 
 	//CLOSE JOYSTICK
-	SDL_JoystickClose(stick);
+	if(stick == NULL)
+		SDL_JoystickClose(stick);
 
 	// Clean up variables.
 	Mix_CloseAudio(); // Close the audio
