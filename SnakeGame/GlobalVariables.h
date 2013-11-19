@@ -17,4 +17,9 @@
 #define DIRECTION_RIGHT 2
 #define DIRECTION_LEFT 3
 
+#define BODYSIZE 20
+
+#define APPLE_SCORE 100
+#define REMOVEBODYPART_SCORE 100
+
 #endif

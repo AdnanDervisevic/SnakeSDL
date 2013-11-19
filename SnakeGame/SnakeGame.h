@@ -24,6 +24,13 @@ public:
 	void Draw(float elapsedGameTime);
 	void Cleanup();
 
+	void Fire();
+
+	static int Roll(int min, int max)
+	{
+	   return min + static_cast<int>( rand() / static_cast<double>(RAND_MAX) * (max - min) );
+	}
+
 private:
 	Uint32 currentTicks;
 	Uint32 oldTicks;
@@ -34,7 +41,23 @@ private:
 	TTF_Font* font;
 	SoundEffect* proj;
 
-	Player player;
+	Player player1;
+	Player player2;
+
+	SDL_Surface* bulletTexture;
+	Rectangle bulletSpawnHitbox;
+	int bulletBelongsToPlayer;
+	float bulletSpawnTimer;
+
+	Vector2 bulletPosition;
+	Vector2 bulletMotion;
+	bool bulletFired;
+	Rectangle bulletHitbox;
+
+	SDL_Surface* appleTexture;
+	Rectangle appleHitbox;
+	float appleSpawnTimer;
+	bool appleSpawned;
 
 	SDL_Joystick *stick;
 

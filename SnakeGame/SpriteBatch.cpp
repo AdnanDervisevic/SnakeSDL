@@ -6,13 +6,6 @@ SpriteBatch::SpriteBatch(SDL_Surface* backbuffer)
 	this->backbuffer = backbuffer;
 }
 
-// Destroy the spritebatch.
-SpriteBatch::~SpriteBatch()
-{
-	// Free the backbuffer surface.
-	SDL_FreeSurface(this->backbuffer);
-}
-
 // Draw something onto the backbuffer.
 bool SpriteBatch::Draw(SDL_Surface* texture, Vector2 position)
 {

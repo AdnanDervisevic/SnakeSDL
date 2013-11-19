@@ -6,12 +6,12 @@
 #include "Rectangle.h"
 #include "Vector2.h"
 #include "Color.h"
+#include <memory>
 
 class SpriteBatch
 {
 public:
 	SpriteBatch(SDL_Surface* backbuffer);
-	~SpriteBatch();
 	
 	bool Draw(SDL_Surface* texture, Vector2 position);
 	bool Draw(SDL_Surface* texture, Vector2 position, Rectangle sourceRect);

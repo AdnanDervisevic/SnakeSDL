@@ -14,7 +14,6 @@
     <ClInclude Include="BodyPart.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="GlobalVariables.h" />
-    <ClInclude Include="IDrawableGameComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Music.h" />
     <ClInclude Include="SoundEffect.h" />

@@ -112,10 +112,3 @@ void BodyPart::Draw(float elapsedGameTime, SpriteBatch* spriteBatch)
 	// Draws the players sprite.
 	spriteBatch->Draw(this->Texture, this->Position, Rectangle(0, 0, 20, 20));
 }
-
-// Cleans up all the variables.
-void BodyPart::Cleanup()
-{
-	// Free up the texture surface.
-	SDL_FreeSurface(this->Texture);
-}

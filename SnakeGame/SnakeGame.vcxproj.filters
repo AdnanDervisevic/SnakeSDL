@@ -183,9 +183,6 @@
     <ClInclude Include="Color.h">
       <Filter>Header Files\XNA</Filter>
     </ClInclude>
-    <ClInclude Include="IDrawableGameComponent.h">
-      <Filter>Header Files\XNA</Filter>
-    </ClInclude>
     <ClInclude Include="SoundEffect.h">
       <Filter>Header Files\XNA</Filter>
     </ClInclude>
