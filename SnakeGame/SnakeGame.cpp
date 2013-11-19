@@ -216,7 +216,7 @@ void SnakeGame::Update(float elapsedGameTime)
 	if (!bulletFired)
 	{
 		player1.Update(elapsedGameTime, appleHitbox, bulletHitbox, player2);
-		//player2.Update(elapsedGameTime, appleHitbox, bulletHitbox, player1);
+		player2.Update(elapsedGameTime, appleHitbox, bulletHitbox, player1);
 	
 		if (this->bulletBelongsToPlayer == 0)
 			if (this->player1.HeadCollides(this->bulletSpawnHitbox))
