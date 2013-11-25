@@ -1,4 +1,5 @@
 #include "SnakeGame.h"
+#include "GPIO.h"
 #include <iostream>
 
 // Creates a new Snake object.
@@ -116,6 +117,38 @@ bool SnakeGame::Initialize()
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
+
+	// Enabled GPIO pins
+	if (GPIOExport(GPIO_BUTTON) == -1)
+		return false;
+	if (GPIOExport(GPIO_BUTTONUP) == -1)
+		return false;
+	if (GPIOExport(GPIO_BUTTONDOWN) == -1)
+		return false;
+	if (GPIOExport(GPIO_BUTTONRIGHT) == -1)
+		return false;
+	if (GPIOExport(GPIO_BUTTONLEFT) == -1)
+		return false;
+
+	if (GPIODirection(GPIO_BUTTON, IN) == -1)
+		if (GPIODirection(GPIO_BUTTON, IN) == -1)
+			return false;
+
+	if (GPIODirection(GPIO_BUTTONUP, IN) == -1)
+		if (GPIODirection(GPIO_BUTTONUP, IN) == -1)
+			return false;
+
+	if (GPIODirection(GPIO_BUTTONDOWN, IN) == -1)
+		if (GPIODirection(GPIO_BUTTONDOWN, IN) == -1)
+			return false;
+
+	if (GPIODirection(GPIO_BUTTONRIGHT, IN) == -1)
+		if (GPIODirection(GPIO_BUTTONRIGHT, IN) == -1)
+			return false;
+
+	if (GPIODirection(GPIO_BUTTONLEFT, IN) == -1)
+		if (GPIODirection(GPIO_BUTTONLEFT, IN) == -1)
+			return false;
         
 	return true;
 }
@@ -174,6 +207,17 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput()
 {
+	if (GPIORead(GPIO_BUTTON) == 0)
+		Fire();
+
+	if (GPIORead(GPIO_BUTTONUP) == 0)
+		player1.Turn(DIRECTION_UP);
+	else if (GPIORead(GPIO_BUTTONDOWN) == 0)
+		player1.Turn(DIRECTION_DOWN);
+	else if (GPIORead(GPIO_BUTTONRIGHT) == 0)
+		player1.Turn(DIRECTION_RIGHT);
+	else if (GPIORead(GPIO_BUTTONLEFT) == 0)
+		player1.Turn(DIRECTION_LEFT);
 }
 
 void SnakeGame::Fire()
@@ -386,6 +430,12 @@ void SnakeGame::Draw(float elapsedGameTime)
 // Here we clean up and releases our resources.
 void SnakeGame::Cleanup()
 {
+	GPIOUnexport(GPIO_BUTTON);
+	GPIOUnexport(GPIO_BUTTONUP);
+	GPIOUnexport(GPIO_BUTTONDOWN);
+	GPIOUnexport(GPIO_BUTTONRIGHT);
+	GPIOUnexport(GPIO_BUTTONLEFT);
+
 	// Cleans up the players variables.
 	player1.Cleanup();
 	player2.Cleanup();
@@ -415,7 +465,7 @@ void SnakeGame::Cleanup()
 	SDL_FreeSurface(backbuffer);
 	SDL_Quit();
 }
-
+/*
 // The main entry point of the program.
 int main(int argc, char* argv[])
 {
@@ -424,3 +474,4 @@ int main(int argc, char* argv[])
 
 	return snake.Run();
 }
+*/

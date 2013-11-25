@@ -1,11 +1,3 @@
-/* blink.c
- *
- * Raspberry Pi GPIO example using sysfs interface.
- * Guillermo A. Amaral B. <g@maral.me>
- *
- * This file blinks GPIO 4 (P1-07) while reading GPIO 24 (P1_18).
- */
-
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -19,10 +11,13 @@
 #define LOW  0
 #define HIGH 1
 
-#define PIN  7 /* P1-18 */
+#define GPIO_BUTTON  7 /* P1-18 */
+#define GPIO_BUTTONUP 27
+#define GPIO_BUTTONDOWN 10
+#define GPIO_BUTTONRIGHT 4
+#define GPIO_BUTTONLEFT 3
 
-static int
-GPIOExport(int pin)
+static int GPIOExport(int pin)
 {
 #define BUFFER_MAX 3
 	char buffer[BUFFER_MAX];
@@ -41,8 +36,7 @@ GPIOExport(int pin)
 	return(0);
 }
 
-static int
-GPIOUnexport(int pin)
+static int GPIOUnexport(int pin)
 {
 	char buffer[BUFFER_MAX];
 	ssize_t bytes_written;
@@ -60,8 +54,7 @@ GPIOUnexport(int pin)
 	return(0);
 }
 
-static int
-GPIODirection(int pin, int dir)
+static int GPIODirection(int pin, int dir)
 {
 	static const char s_directions_str[]  = "in\0out";
 
@@ -85,8 +78,7 @@ GPIODirection(int pin, int dir)
 	return(0);
 }
 
-static int
-GPIORead(int pin)
+static int GPIORead(int pin)
 {
 #define VALUE_MAX 30
 	char path[VALUE_MAX];
@@ -110,8 +102,7 @@ GPIORead(int pin)
 	return(atoi(value_str));
 }
 
-static int
-GPIOWrite(int pin, int value)
+static int GPIOWrite(int pin, int value)
 {
 	static const char s_values_str[] = "01";
 
@@ -131,41 +122,5 @@ GPIOWrite(int pin, int value)
 	}
 
 	close(fd);
-	return(0);
-}
-
-int
-main(int argc, char *argv[])
-{
-	int repeat = 10;
-
-	/*
-	 * Enable GPIO pins
-	 */
-	if (-1 == GPIOExport(PIN))
-		return(1);
-
-	/*
-	 * Set GPIO directions
-	 */
-	if (-1 == GPIODirection(PIN, IN))
-		return(2);
-
-	do {
-		/*
-		 * Read GPIO value
-		 */
-		printf("I'm reading %d in GPIO %d\n", GPIORead(PIN), PIN);
-
-		usleep(500 * 1000);
-	}
-	while (repeat--);
-
-	/*
-	 * Disable GPIO pins
-	 */
-	if (-1 == GPIOUnexport(PIN))
-		return(4);
-
 	return(0);
 }
