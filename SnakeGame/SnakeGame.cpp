@@ -465,7 +465,7 @@ void SnakeGame::Cleanup()
 	SDL_FreeSurface(backbuffer);
 	SDL_Quit();
 }
-/*
+
 // The main entry point of the program.
 int main(int argc, char* argv[])
 {
@@ -474,4 +474,3 @@ int main(int argc, char* argv[])
 
 	return snake.Run();
 }
-*/
