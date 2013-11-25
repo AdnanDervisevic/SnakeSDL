@@ -130,25 +130,91 @@ bool SnakeGame::Initialize()
 	if (GPIOExport(GPIO_BUTTONLEFT) == -1)
 		return false;
 
-	if (GPIODirection(GPIO_BUTTON, IN) == -1)
-		if (GPIODirection(GPIO_BUTTON, IN) == -1)
+	int maxTries = 6;
+	int pinValue = 0;
+	int tries = 0;
+	do
+	{
+		if (tries == maxTries)
 			return false;
 
-	if (GPIODirection(GPIO_BUTTONUP, IN) == -1)
-		if (GPIODirection(GPIO_BUTTONUP, IN) == -1)
+		pinValue = GPIODirection(GPIO_BUTTON, IN);
+
+		if (pinValue == -1)
+		{
+			tries++;
+			usleep(200000);
+		}
+
+	} while (pinValue == -1);
+
+	pinValue = 0;
+	tries = 0;
+	do
+	{
+		if (tries == maxTries)
 			return false;
 
-	if (GPIODirection(GPIO_BUTTONDOWN, IN) == -1)
-		if (GPIODirection(GPIO_BUTTONDOWN, IN) == -1)
+		pinValue = GPIODirection(GPIO_BUTTONUP, IN);
+
+		if (pinValue == -1)
+		{
+			tries++;
+			usleep(200000);
+		}
+
+	} while (pinValue == -1);
+
+	pinValue = 0;
+	tries = 0;
+	do
+	{
+		if (tries == maxTries)
 			return false;
 
-	if (GPIODirection(GPIO_BUTTONRIGHT, IN) == -1)
-		if (GPIODirection(GPIO_BUTTONRIGHT, IN) == -1)
+		pinValue = GPIODirection(GPIO_BUTTONDOWN, IN);
+
+		if (pinValue == -1)
+		{
+			tries++;
+			usleep(200000);
+		}
+
+	} while (pinValue == -1);
+
+	pinValue = 0;
+	tries = 0;
+	do
+	{
+		if (tries == maxTries)
 			return false;
 
-	if (GPIODirection(GPIO_BUTTONLEFT, IN) == -1)
-		if (GPIODirection(GPIO_BUTTONLEFT, IN) == -1)
+		pinValue = GPIODirection(GPIO_BUTTONRIGHT, IN);
+
+		if (pinValue == -1)
+		{
+			tries++;
+			usleep(200000);
+		}
+
+	} while (pinValue == -1);
+
+	pinValue = 0;
+	tries = 0;
+	do
+	{
+		if (tries == maxTries)
 			return false;
+
+		pinValue = GPIODirection(GPIO_BUTTONLEFT, IN);
+
+		if (pinValue == -1)
+		{
+			tries++;
+			usleep(200000);
+		}
+
+	} while (pinValue == -1);
         
 	return true;
 }
@@ -207,17 +273,25 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput()
 {
-	if (GPIORead(GPIO_BUTTON) == 0)
-		Fire();
+	int pinValue;
+	int pinValue2;
 
-	if (GPIORead(GPIO_BUTTONUP) == 0)
-		player1.Turn(DIRECTION_UP);
-	else if (GPIORead(GPIO_BUTTONDOWN) == 0)
+	//if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+		//Fire();
+
+	//printf("%i", pinValue);
+
+	//if (GPIORead(GPIO_BUTTONUP) == 0)
+		//player1.Turn(DIRECTION_UP);
+	if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
 		player1.Turn(DIRECTION_DOWN);
-	else if (GPIORead(GPIO_BUTTONRIGHT) == 0)
+	else if ((pinValue2 =  GPIORead(GPIO_BUTTONRIGHT)) == 1)
 		player1.Turn(DIRECTION_RIGHT);
-	else if (GPIORead(GPIO_BUTTONLEFT) == 0)
+	/*else if (GPIORead(GPIO_BUTTONLEFT) == 0)
 		player1.Turn(DIRECTION_LEFT);
+	*/
+	printf("DOWN: %i\n", pinValue);
+	printf("RIGHT: %i", pinValue2);
 }
 
 void SnakeGame::Fire()
