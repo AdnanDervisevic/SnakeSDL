@@ -285,7 +285,8 @@ void SnakeGame::HandleInput()
 			printf("Turn Down\n");
 		}
 	}
-	else if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
+
+	if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 	{
 		usleep(10000);
 		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
