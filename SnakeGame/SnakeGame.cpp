@@ -280,7 +280,10 @@ void SnakeGame::HandleInput()
 	{
 		usleep(10000);
 		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
+		{
 			player1.Turn(DIRECTION_DOWN);
+			printf("Turn\n");
+		}
 	}
 	/*else if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 	{
@@ -307,7 +310,7 @@ void SnakeGame::HandleInput()
 	/*else if (GPIORead(GPIO_BUTTONLEFT) == 0)
 		player1.Turn(DIRECTION_LEFT);
 	*/
-	printf("DOWN: %i\n", pinValue);
+	//printf("DOWN: %i\n", pinValue);
 	//printf("RIGHT: %i", pinValue2);
 }
 
