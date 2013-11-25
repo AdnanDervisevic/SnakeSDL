@@ -275,10 +275,10 @@ void SnakeGame::HandleInput()
 {
 	int pinValue;
 
-	if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+	if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 	{
 		usleep(10000);
-		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 			player1.Turn(DIRECTION_DOWN);
 	}
 	
