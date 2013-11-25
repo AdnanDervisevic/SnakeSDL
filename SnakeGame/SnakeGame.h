@@ -10,6 +10,7 @@
 #include "SpriteFont.h"
 #include "SoundEffect.h"
 #include "Music.h"
+#include <cstdlib>
 
 class SnakeGame
 {
@@ -28,7 +29,7 @@ public:
 
 	static int Roll(int min, int max)
 	{
-	   return min + static_cast<int>( rand() / static_cast<double>(RAND_MAX) * (max - min) );
+	   return min + static_cast<int>( rand() / static_cast<double>(0x7fff) * (max - min) );
 	}
 
 private:
