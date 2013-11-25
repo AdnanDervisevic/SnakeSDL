@@ -274,7 +274,15 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 void SnakeGame::HandleInput()
 {
 	int pinValue;
-	int pinValue2;
+
+	if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+	{
+		usleep(10000);
+		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+			player1.Turn(DIRECTION_DOWN);
+	}
+	
+	//int pinValue2;
 
 	//if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
 		//Fire();
@@ -283,15 +291,17 @@ void SnakeGame::HandleInput()
 
 	//if (GPIORead(GPIO_BUTTONUP) == 0)
 		//player1.Turn(DIRECTION_UP);
+	/*
 	if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
 		player1.Turn(DIRECTION_DOWN);
 	else if ((pinValue2 =  GPIORead(GPIO_BUTTONRIGHT)) == 1)
 		player1.Turn(DIRECTION_RIGHT);
+	*/
 	/*else if (GPIORead(GPIO_BUTTONLEFT) == 0)
 		player1.Turn(DIRECTION_LEFT);
 	*/
 	printf("DOWN: %i\n", pinValue);
-	printf("RIGHT: %i", pinValue2);
+	//printf("RIGHT: %i", pinValue2);
 }
 
 void SnakeGame::Fire()
