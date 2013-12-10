@@ -22,4 +22,6 @@
 #define APPLE_SCORE 100
 #define REMOVEBODYPART_SCORE 100
 
+#define WINNER_SCORE 1000
+
 #endif

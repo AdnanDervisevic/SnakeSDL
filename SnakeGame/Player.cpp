@@ -76,7 +76,7 @@ bool Player::BodyCollides(const Rectangle& rect)
 }
 
 // Updates the player.
-void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player)
+void Player::Update(SoundEffect& soundEffect, float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player)
 {
 	if (!this->alive)
 		return;
@@ -96,7 +96,7 @@ void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bull
 
 	// Check if you're eating yourself = you die.
 	BodyPart& head = this->bodyParts.at(0);
-	for (std::vector<BodyPart>::iterator bodyPart = bodyParts.begin() + 1; bodyPart != bodyParts.end(); bodyPart++)
+	for (std::vector<BodyPart>::iterator bodyPart = bodyParts.begin() + 2; bodyPart != bodyParts.end(); bodyPart++)
 		if (head.BoundingBox.Intersects(bodyPart->BoundingBox))
 		{
 			Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
@@ -107,6 +107,7 @@ void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bull
 			Vector2 pos(rect.x, rect.y);
 
 			Reset(pos, false);
+			soundEffect.Play(false);
 			break;
 		}
 }
@@ -192,13 +193,14 @@ void Player::Reset(Vector2 startPos, bool spawnUpper)
 {
 	if (this->bodyParts.size() > 2)
 	{
+		BodyPart& head = this->bodyParts.at(0);
 		BodyPart& tail = this->bodyParts.at(this->bodyParts.size() - 1);
 		BodyPart& body = this->bodyParts.at(1);
 
 		tail.Position = body.Position;
-		tail.Motion = body.Motion;
-		tail.TargetMotion = body.TargetMotion;
-		tail.TargetPosition = body.TargetPosition;
+		tail.Motion = head.Motion;
+		tail.TargetMotion = head.TargetMotion;
+		tail.TargetPosition = head.TargetPosition;
 		tail.BoundingBox = body.BoundingBox;
 
 		this->bodyParts.erase(this->bodyParts.begin() + 1, this->bodyParts.end() - 1);

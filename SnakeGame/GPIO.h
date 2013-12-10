@@ -1,3 +1,4 @@
+/*
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -11,7 +12,7 @@
 #define LOW  0
 #define HIGH 1
 
-#define GPIO_BUTTON  7 /* P1-18 */
+#define GPIO_BUTTON  7
 #define GPIO_BUTTONUP 27
 #define GPIO_BUTTONDOWN 10
 #define GPIO_BUTTONRIGHT 4
@@ -124,3 +125,4 @@ static int GPIOWrite(int pin, int value)
 	close(fd);
 	return(0);
 }
+*/

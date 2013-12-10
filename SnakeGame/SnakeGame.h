@@ -11,6 +11,8 @@
 #include "SoundEffect.h"
 #include "Music.h"
 #include <cstdlib>
+#include <string>
+#include <time.h>
 
 class SnakeGame
 {
@@ -32,6 +34,8 @@ public:
 	   return min + static_cast<int>( rand() / static_cast<double>(0x7fff) * (max - min) );
 	}
 
+	SoundEffect* chomp;
+
 private:
 	Uint32 currentTicks;
 	Uint32 oldTicks;
@@ -41,9 +45,15 @@ private:
 
 	TTF_Font* font;
 	SoundEffect* proj;
+	SoundEffect* coin;
 
 	Player player1;
 	Player player2;
+
+	SDL_Surface* startScreen;
+	SDL_Surface* winnerScreen;
+
+	bool gameStarted;
 
 	SDL_Surface* bulletTexture;
 	Rectangle bulletSpawnHitbox;

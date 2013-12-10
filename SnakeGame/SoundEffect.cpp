@@ -18,6 +18,8 @@ SoundEffect* SoundEffect::Load(char* file)
 // Play the sound effect.
 void SoundEffect::Play(bool loop)
 {
+	SoundEffect::Stop();
+
 	// Check if we're already playing this sound effect.
 	if (channel < 0)
 	{

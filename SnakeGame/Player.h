@@ -5,6 +5,7 @@
 #include "Vector2.h"
 #include <vector>
 #include "BodyPart.h"
+#include "SoundEffect.h"
 
 class Player
 {
@@ -13,7 +14,7 @@ public:
 
 	bool Initialize(Vector2 position, SDL_Surface* headTexture, SDL_Surface* bodyTexture, SDL_Surface* tailTexture);
 	void HandleInput();
-	void Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player);
+	void Update(SoundEffect& soundEffect, float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player);
 	void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	void Cleanup();
 

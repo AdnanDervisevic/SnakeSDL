@@ -78,7 +78,7 @@ bool SnakeGame::Initialize()
 		return false;
 
 	// Load player2
-	if (player2.Initialize(Vector2(200, SCREEN_HEIGHT - BODYSIZE), Texture::Load("Assets/playerTexture.png"), Texture::Load("Assets/playerTexture.png"), Texture::Load("Assets/playerTexture.png")) == false)
+	if (player2.Initialize(Vector2(200, SCREEN_HEIGHT - BODYSIZE), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png")) == false)
 		return false;
 
 	if ((bulletTexture = Texture::Load("Assets/bullet.png")) == NULL)
@@ -87,8 +87,14 @@ bool SnakeGame::Initialize()
 	if ((appleTexture = Texture::Load("Assets/apple.png")) == NULL)
 		return false;
 
+	if ((startScreen = Texture::Load("Assets/startScreen.png")) == NULL)
+		return false;
+
+	if ((winnerScreen = Texture::Load("Assets/winnerScreen.png")) == NULL)
+		return false;
+
 	// Loads a font using the SpriteFont helper.
-	if ((font = SpriteFont::Load("Assets/Lazy.ttf", 28)) == NULL)
+	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
 
 	// Open the mixer, this is needed to play any audio.
@@ -99,9 +105,20 @@ bool SnakeGame::Initialize()
 	if ((proj = SoundEffect::Load("Assets/proj.wav")) == NULL)
 		return false;
 
+	if ((chomp = SoundEffect::Load("Assets/chomp.wav")) == NULL)
+		return false;
+
+	if ((coin = SoundEffect::Load("Assets/coin.wav")) == NULL)
+		return false;
+
 	// Load the background music, music is static because you can only play one song at the time.
 	if ((Music::Load("Assets/background.ogg")) == false)
 		return false;
+
+	gameStarted = false;
+
+	// Set the rand time to NULL for true randomness.
+	srand(time(NULL));
 
 	// Set the volume of the music to 10%
 	Music::Volume(10);
@@ -110,14 +127,13 @@ bool SnakeGame::Initialize()
 	Music::Play(true);
 
 	// Set the volume of the projectile effect.
-	proj->Volume(30);
-
-	// Start the sound effect and loop it.
-	proj->Play(true);
+	//proj->Volume(30);
+	//coin->Volume(30);
+	//chomp->Volume(30);
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
-
+	/*
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
 		return false;
@@ -129,7 +145,7 @@ bool SnakeGame::Initialize()
 		return false;
 	if (GPIOExport(GPIO_BUTTONLEFT) == -1)
 		return false;
-
+		
 	int maxTries = 6;
 	int pinValue = 0;
 	int tries = 0;
@@ -215,21 +231,48 @@ bool SnakeGame::Initialize()
 		}
 
 	} while (pinValue == -1);
-        
+        */
 	return true;
 }
 
 // Here we handle all the input coming from the SDL library.
 void SnakeGame::HandleSDLInput(SDL_Event* event)
 {
-	// Check if we want to quit
-	switch (event->type)
+	if (!gameStarted)
 	{
+		switch (event->type)
+		{
 		case SDL_QUIT:
 			running = false;
 			break;
-      
-		// Om inte joystick är kopplad -- debugging
+
+		case SDL_KEYDOWN:
+			if (event->key.keysym.sym == SDLK_ESCAPE)
+				running = false;
+			else if (event->key.keysym.sym == SDLK_KP_ENTER)
+			{
+				gameStarted = true;
+				player1.Reset(Vector2(0, 0), true);
+				player2.Reset(Vector2(0, 0), false);
+				this->bulletBelongsToPlayer = 0;
+				this->bulletSpawnTimer = 0;
+				this->bulletFired = false;
+				this->appleSpawned = false;
+				this->appleSpawnTimer = 0;
+			}
+			break;
+		}
+	}
+	else
+	{
+		// Check if we want to quit
+		switch (event->type)
+		{
+		case SDL_QUIT:
+			running = false;
+			break;
+
+			// Om inte joystick är kopplad -- debugging
 		case SDL_KEYDOWN:
 			if (event->key.keysym.sym == SDLK_w)
 				player1.Turn(DIRECTION_UP);
@@ -252,20 +295,21 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			else if (event->key.keysym.sym == SDLK_SPACE && this->bulletBelongsToPlayer > 0)
 				Fire();
 			break;
-           		
-		// Access the hat movement - For arcade stick connected via USB, one of the movement options
-		if(stick != NULL)
-		{
-			case SDL_JOYHATMOTION:
-				if(SDL_JoystickGetHat(stick, 0) == 0x01)
+
+		case SDL_JOYHATMOTION:
+			// Access the hat movement - For arcade stick connected via USB, one of the movement options
+			if (stick != NULL)
+			{
+				if (SDL_JoystickGetHat(stick, 0) == 0x01)
 					player1.Turn(DIRECTION_UP);
-				else if(SDL_JoystickGetHat(stick, 0) == 0x04)
+				else if (SDL_JoystickGetHat(stick, 0) == 0x04)
 					player1.Turn(DIRECTION_DOWN);
-				else if(SDL_JoystickGetHat(stick, 0) == 0x08 || SDL_JoystickGetHat(stick, 0) == (0x08|0x04) || SDL_JoystickGetHat(stick, 0) == (0x08|0x01))
+				else if (SDL_JoystickGetHat(stick, 0) == 0x08 || SDL_JoystickGetHat(stick, 0) == (0x08 | 0x04) || SDL_JoystickGetHat(stick, 0) == (0x08 | 0x01))
 					player1.Turn(DIRECTION_LEFT);
-				else if(SDL_JoystickGetHat(stick, 0) == 0x02 || SDL_JoystickGetHat(stick, 0) == (0x02|0x04) || SDL_JoystickGetHat(stick, 0) == (0x02|0x01))
+				else if (SDL_JoystickGetHat(stick, 0) == 0x02 || SDL_JoystickGetHat(stick, 0) == (0x02 | 0x04) || SDL_JoystickGetHat(stick, 0) == (0x02 | 0x01))
 					player1.Turn(DIRECTION_RIGHT);
-				break;
+			}
+			break;
 		}
 	}
 }
@@ -273,6 +317,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput()
 {
+	/*
 	int pinValue;
 
 
@@ -320,6 +365,7 @@ void SnakeGame::HandleInput()
 
 void SnakeGame::Fire()
 {
+	proj->Play(false);
 	BodyPart& head = (this->bulletBelongsToPlayer == 1) ? this->player1.bodyParts.at(0) : this->player2.bodyParts.at(0);
 
 	if (head.Motion.X == 1 && head.Motion.Y == 0)
@@ -350,150 +396,176 @@ void SnakeGame::Fire()
 	this->bulletPosition.X = this->bulletHitbox.x;
 	this->bulletPosition.Y = this->bulletHitbox.y;
 	this->bulletFired = true;
+
+	// Start the sound effect and loop it.
 }
 
 // Here we update our game.
 void SnakeGame::Update(float elapsedGameTime)
 {
-	if (!bulletFired)
+	if (gameStarted)
 	{
-		player1.Update(elapsedGameTime, appleHitbox, bulletHitbox, player2);
-		player2.Update(elapsedGameTime, appleHitbox, bulletHitbox, player1);
-	
-		if (this->bulletBelongsToPlayer == 0)
-			if (this->player1.HeadCollides(this->bulletSpawnHitbox))
-				this->bulletBelongsToPlayer = 1;
-
-		bool player1EatsPlayer2 = player1.HeadCollides(player2);
-		bool player2EatsPlayer1 = player2.HeadCollides(player1);
-
-		if (player1EatsPlayer2 && player2EatsPlayer1)
+		if (!bulletFired)
 		{
-			player1.Reset(Vector2(0, 0), true);
-			player2.Reset(Vector2(0, 0), false);
-		}
-		else if (player1EatsPlayer2 && !player2EatsPlayer1)
-		{
-			Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
-			do
+			player1.Update(*chomp, elapsedGameTime, appleHitbox, bulletHitbox, player2);
+			player2.Update(*chomp, elapsedGameTime, appleHitbox, bulletHitbox, player1);
+
+			if (this->bulletBelongsToPlayer == 0)
 			{
-				rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
-				rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-			} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
-			Vector2 pos(rect.x, rect.y);
-			player1.Reset(pos, false);
-		}
-		else if (!player1EatsPlayer2 && player2EatsPlayer1)
-		{
-			Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
-			do
+				if (this->player1.HeadCollides(this->bulletSpawnHitbox))
+				{
+					this->bulletBelongsToPlayer = 1;
+					this->coin->Play(false);
+				}
+				else if (this->player2.HeadCollides(this->bulletSpawnHitbox))
+				{
+					this->bulletBelongsToPlayer = 2;
+					this->coin->Play(false);
+				}
+			}
+
+			bool player1EatsPlayer2 = player1.HeadCollides(player2);
+			bool player2EatsPlayer1 = player2.HeadCollides(player1);
+
+			if (player1EatsPlayer2 && player2EatsPlayer1)
 			{
-				rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
-				rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-			} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
-			Vector2 pos(rect.x, rect.y);
-
-			player2.Reset(pos, false);
-		}
-
-		if (this->appleSpawned && player1.HeadCollides(this->appleHitbox))
-		{
-			player1.Score += APPLE_SCORE;
-			player1.AddBodyPart();
-			this->appleSpawnTimer = 0;
-			this->appleSpawned = false;
-		}
-		else if (this->appleSpawned && player2.HeadCollides(this->appleHitbox))
-		{
-			player2.Score += APPLE_SCORE;
-			player2.AddBodyPart();
-			this->appleSpawnTimer = 0;
-			this->appleSpawned = false;
-		}
-
-		this->appleSpawnTimer += elapsedGameTime;
-		if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
-		{
-			this->appleSpawned = true;
-
-			do
+				player1.Reset(Vector2(0, 0), true);
+				player2.Reset(Vector2(0, 0), false);
+				chomp->Play(false);
+			}
+			else if (player1EatsPlayer2 && !player2EatsPlayer1)
 			{
-				this->appleHitbox.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE);
-				this->appleHitbox.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
-			} while (this->appleHitbox.Intersects(this->bulletHitbox) || player1.Collides(this->appleHitbox) || player2.Collides(this->appleHitbox));
-		}
-	}
-	else
-	{
-		this->bulletPosition.X += (this->bulletMotion.X * 120 * elapsedGameTime);
-		this->bulletPosition.Y += (this->bulletMotion.Y * 120 * elapsedGameTime);
+				Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
+				do
+				{
+					rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
+					rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
+				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+				Vector2 pos(rect.x, rect.y);
+				player1.Reset(pos, false);
+				chomp->Play(false);
+			}
+			else if (!player1EatsPlayer2 && player2EatsPlayer1)
+			{
+				Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
+				do
+				{
+					rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
+					rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
+				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+				Vector2 pos(rect.x, rect.y);
+				player2.Reset(pos, false);
+				chomp->Play(false);
+			}
 
-		this->bulletHitbox.x = static_cast<int>(this->bulletPosition.X);
-		this->bulletHitbox.y = static_cast<int>(this->bulletPosition.Y);
+			if (this->appleSpawned && player1.HeadCollides(this->appleHitbox))
+			{
+				player1.Score += APPLE_SCORE;
+				player1.AddBodyPart();
+				this->appleSpawnTimer = 0;
+				this->appleSpawned = false;
+				this->coin->Play(false);
+			}
+			else if (this->appleSpawned && player2.HeadCollides(this->appleHitbox))
+			{
+				player2.Score += APPLE_SCORE;
+				player2.AddBodyPart();
+				this->appleSpawnTimer = 0;
+				this->appleSpawned = false;
+				this->coin->Play(false);
+			}
 
-		if (this->bulletPosition.X > SCREEN_WIDTH || this->bulletPosition.X < 0 || this->bulletPosition.Y > SCREEN_HEIGHT || this->bulletPosition.Y < 0)
-		{
-			this->bulletFired = false;
-			this->bulletBelongsToPlayer = 0;
-			this->bulletSpawnTimer = 0;
+			this->appleSpawnTimer += elapsedGameTime;
+			if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
+			{
+				this->appleSpawned = true;
+
+				do
+				{
+					this->appleHitbox.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE);
+					this->appleHitbox.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
+				} while (this->appleHitbox.Intersects(this->bulletHitbox) || player1.Collides(this->appleHitbox) || player2.Collides(this->appleHitbox));
+			}
 		}
 		else
 		{
-			if (this->bulletBelongsToPlayer == 1)
-			{
-				if (this->player2.HeadCollides(this->bulletHitbox))
-				{
-					// Headshot :!
-					Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
-					do
-					{
-						rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
-						rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-					} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
-					Vector2 pos(rect.x, rect.y);
+			this->bulletPosition.X += (this->bulletMotion.X * 120 * elapsedGameTime);
+			this->bulletPosition.Y += (this->bulletMotion.Y * 120 * elapsedGameTime);
 
-					this->player2.Reset(pos, false);
-					this->bulletFired = false;
-					this->bulletBelongsToPlayer = 0;
-					this->bulletSpawnTimer = 0;
-				}
-				else if (this->player2.BodyCollides(this->bulletHitbox))
-				{
-					// Bodyshot: !
-					this->player2.RemoveBodyPart();
-					this->bulletFired = false;
-					this->bulletBelongsToPlayer = 0;
-					this->bulletSpawnTimer = 0;
-				}
+			this->bulletHitbox.x = static_cast<int>(this->bulletPosition.X);
+			this->bulletHitbox.y = static_cast<int>(this->bulletPosition.Y);
+
+			if (this->bulletPosition.X > SCREEN_WIDTH || this->bulletPosition.X < 0 || this->bulletPosition.Y > SCREEN_HEIGHT || this->bulletPosition.Y < 0)
+			{
+				this->bulletFired = false;
+				this->bulletBelongsToPlayer = 0;
+				this->bulletSpawnTimer = 0;
 			}
-			else if (this->bulletBelongsToPlayer == 2)
+			else
 			{
-				if (this->player1.HeadCollides(this->bulletHitbox))
+				if (this->bulletBelongsToPlayer == 1)
 				{
-					// Headshot :!
-					Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
-					do
+					if (this->player2.HeadCollides(this->bulletHitbox))
 					{
-						rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
-						rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-					} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
-					Vector2 pos(rect.x, rect.y);
+						// Headshot :!
+						Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
+						do
+						{
+							rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
+							rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
+						} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+						Vector2 pos(rect.x, rect.y);
 
-					this->player1.Reset(pos, false);
-					this->bulletFired = false;
-					this->bulletBelongsToPlayer = 0;
-					this->bulletSpawnTimer = 0;
+						this->player2.Reset(pos, false);
+						this->bulletFired = false;
+						this->bulletBelongsToPlayer = 0;
+						this->bulletSpawnTimer = 0;
+						chomp->Play(false);
+					}
+					else if (this->player2.BodyCollides(this->bulletHitbox))
+					{
+						// Bodyshot: !
+						this->player2.RemoveBodyPart();
+						this->bulletFired = false;
+						this->bulletBelongsToPlayer = 0;
+						this->bulletSpawnTimer = 0;
+						chomp->Play(false);
+					}
 				}
-				else if (this->player1.BodyCollides(this->bulletHitbox))
+				else if (this->bulletBelongsToPlayer == 2)
 				{
-					// Bodyshot: !
-					this->player1.RemoveBodyPart();
-					this->bulletFired = false;
-					this->bulletBelongsToPlayer = 0;
-					this->bulletSpawnTimer = 0;
+					if (this->player1.HeadCollides(this->bulletHitbox))
+					{
+						// Headshot :!
+						Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
+						do
+						{
+							rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
+							rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
+						} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+						Vector2 pos(rect.x, rect.y);
+
+						this->player1.Reset(pos, false);
+						this->bulletFired = false;
+						this->bulletBelongsToPlayer = 0;
+						this->bulletSpawnTimer = 0;
+						chomp->Play(false);
+					}
+					else if (this->player1.BodyCollides(this->bulletHitbox))
+					{
+						// Bodyshot: !
+						this->player1.RemoveBodyPart();
+						this->bulletFired = false;
+						this->bulletBelongsToPlayer = 0;
+						this->bulletSpawnTimer = 0;
+						chomp->Play(false);
+					}
 				}
 			}
 		}
+
+		if (player1.Score >= WINNER_SCORE || player2.Score >= WINNER_SCORE)
+			gameStarted = false;
 	}
 }
 
@@ -503,23 +575,61 @@ void SnakeGame::Draw(float elapsedGameTime)
 	// Clears the backbuffer.
 	SDL_FillRect(backbuffer, NULL, SDL_MapRGB(backbuffer->format, 0, 0, 0));
 
-	this->bulletSpawnTimer += elapsedGameTime;
-	if (this->bulletSpawnTimer >= 4 && this->bulletBelongsToPlayer == 0)
+	if (!gameStarted)
 	{
-		this->spriteBatch->Draw(this->bulletTexture, Vector2(this->bulletSpawnHitbox.x, this->bulletSpawnHitbox.y));
+		if (player1.Score > 0 || player2.Score > 0)
+		{
+			if (player1.Score > player2.Score)
+			{
+				std::string message = "Score: " + std::to_string(this->player1.Score) + " over " + std::to_string(this->player2.Score);
+
+				// Player 1 wins:!
+				this->spriteBatch->Draw(this->winnerScreen, Vector2(0, 0));
+				this->spriteBatch->DrawString("Player 1 Wins", Vector2(200, 150), this->font, Color(255, 255, 255));
+				this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
+			}
+			else if (player1.Score < player2.Score)
+			{
+				// Player 2 Wins
+				std::string message = "Score: " + std::to_string(this->player2.Score) + " over " + std::to_string(this->player1.Score);
+
+				this->spriteBatch->Draw(this->winnerScreen, Vector2(0, 0));
+				this->spriteBatch->DrawString("Player 2 Wins", Vector2(200, 150), this->font, Color(255, 255, 255));
+				this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
+			}
+		}
+		else
+		{
+			// Else draw the start screen.
+			this->spriteBatch->Draw(this->startScreen, Vector2(0, 0));
+		}
 	}
-
-	if (this->appleSpawned)
-		this->spriteBatch->Draw(this->appleTexture, Vector2(this->appleHitbox.x, this->appleHitbox.y));
-
-	if (this->bulletFired)
+	else
 	{
-		this->spriteBatch->Draw(this->bulletTexture, this->bulletPosition);
-	}
+		this->bulletSpawnTimer += elapsedGameTime;
+		if (this->bulletSpawnTimer >= 4 && this->bulletBelongsToPlayer == 0)
+		{
+			this->spriteBatch->Draw(this->bulletTexture, Vector2(this->bulletSpawnHitbox.x, this->bulletSpawnHitbox.y));
+		}
 
-	// Draws the players.
-	player1.Draw(elapsedGameTime, this->spriteBatch);
-	player2.Draw(elapsedGameTime, this->spriteBatch);
+		if (this->appleSpawned)
+			this->spriteBatch->Draw(this->appleTexture, Vector2(this->appleHitbox.x, this->appleHitbox.y));
+
+		if (this->bulletFired)
+		{
+			this->spriteBatch->Draw(this->bulletTexture, this->bulletPosition);
+		}
+
+		// Draws the players.
+		player1.Draw(elapsedGameTime, this->spriteBatch);
+		player2.Draw(elapsedGameTime, this->spriteBatch);
+
+		std::string brownScore = "Brown Score: " + std::to_string(this->player1.Score);
+		std::string blueScore = "Blue Score: " + std::to_string(this->player2.Score);
+		
+		this->spriteBatch->DrawString(brownScore.c_str(), Vector2(2, 2), this->font, Color(255, 255, 255));
+		this->spriteBatch->DrawString(blueScore.c_str(), Vector2(2, SCREEN_HEIGHT - 22), this->font, Color(255, 255, 255));
+	}
 
 	// Shows the backbuffer.
 	SDL_Flip(backbuffer);
@@ -528,16 +638,19 @@ void SnakeGame::Draw(float elapsedGameTime)
 // Here we clean up and releases our resources.
 void SnakeGame::Cleanup()
 {
+	/*
 	GPIOUnexport(GPIO_BUTTON);
 	GPIOUnexport(GPIO_BUTTONUP);
 	GPIOUnexport(GPIO_BUTTONDOWN);
 	GPIOUnexport(GPIO_BUTTONRIGHT);
 	GPIOUnexport(GPIO_BUTTONLEFT);
-
+	*/
 	// Cleans up the players variables.
 	player1.Cleanup();
 	player2.Cleanup();
 
+	SDL_FreeSurface(this->startScreen);
+	SDL_FreeSurface(this->winnerScreen);
 	
 	SDL_FreeSurface(this->bulletTexture);
 	SDL_FreeSurface(this->appleTexture);
@@ -549,6 +662,12 @@ void SnakeGame::Cleanup()
 	// Dispose the projectile sound effect.
 	proj->Dispose();
 	delete proj;
+
+	chomp->Dispose();
+	delete chomp;
+
+	coin->Dispose();
+	delete coin;
 
 	// Dispose the background music.
 	Music::Dispose();
