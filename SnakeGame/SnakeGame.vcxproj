@@ -14,6 +14,7 @@
     <ClInclude Include="BodyPart.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="GlobalVariables.h" />
+    <ClInclude Include="GPIO.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="Vector2.h" />
@@ -67,7 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BodyPart.cpp" />
-    <ClCompile Include="Music.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SnakeGame.cpp" />
     <ClCompile Include="SpriteBatch.cpp" />

@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <string>
 #include <time.h>
+#include <stdio.h>
 
 class SnakeGame
 {
