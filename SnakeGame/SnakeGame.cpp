@@ -478,7 +478,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				this->coin->Play(false);
 			}
 
-			printf("%f - %d", this->appleSpawnTimer, this->appleSpawned);
+			printf("%d\n", this->appleSpawned);
 			this->appleSpawnTimer += elapsedGameTime;
 			if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
 			{
