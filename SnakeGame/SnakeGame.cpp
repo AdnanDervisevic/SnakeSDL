@@ -281,13 +281,13 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 				printf("turning");
 
 				if (SDL_JoystickGetHat(stick, 0) == 0x01)
-					player1.Turn(DIRECTION_UP);
+					player2.Turn(DIRECTION_UP);
 				else if (SDL_JoystickGetHat(stick, 0) == 0x04)
-					player1.Turn(DIRECTION_DOWN);
+					player2.Turn(DIRECTION_DOWN);
 				else if (SDL_JoystickGetHat(stick, 0) == 0x08 || SDL_JoystickGetHat(stick, 0) == (0x08 | 0x04) || SDL_JoystickGetHat(stick, 0) == (0x08 | 0x01))
-					player1.Turn(DIRECTION_LEFT);
+					player2.Turn(DIRECTION_LEFT);
 				else if (SDL_JoystickGetHat(stick, 0) == 0x02 || SDL_JoystickGetHat(stick, 0) == (0x02 | 0x04) || SDL_JoystickGetHat(stick, 0) == (0x02 | 0x01))
-					player1.Turn(DIRECTION_RIGHT);
+					player2.Turn(DIRECTION_RIGHT);
 			}
 			break;
 		}
