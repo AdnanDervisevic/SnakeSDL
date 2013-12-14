@@ -98,7 +98,7 @@ bool SnakeGame::Initialize()
 	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
 
-	gameStarted = false;
+	gameStarted = true;
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
