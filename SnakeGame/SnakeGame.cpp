@@ -9,7 +9,7 @@ SnakeGame::SnakeGame() :
 	bulletSpawnHitbox(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 - 10, 20, 20), 
 	bulletBelongsToPlayer(0), bulletSpawnTimer(0), bulletHitbox(0, 0, 20, 20), bulletMotion(0, 0), bulletPosition(0, 0),
 	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false), 
-	buttonDebounce(0), buttonDebounceTimer(0)
+	buttonTimer(0), enableButtonTimer(false)
 {
 	backbuffer = NULL;
 	spriteBatch = NULL;
@@ -320,41 +320,25 @@ void SnakeGame::HandleInput(float gameTime)
 
 	if (!gameStarted)
 	{
-		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
-		{	
-			buttonMinusDebounce = 0;
-			buttonPlusDebounce++;
-			buttonDebounceTimer += gameTime;
-			if (buttonDebounceTimer >= 0.3)
-			{
-				
-			}
-		}
-		else
+		buttonTimer += gameTime;
+
+		if (buttonTimer >= 0.3)
 		{
-			buttonMinusDebounce--;
-		}
-
-
-
-
-
-
-			
 			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 			{
-
-				printf("Button Check");
-				/*
-				gameStarted = true;
-				player1.Reset(Vector2(0, 0), true);
-				player2.Reset(Vector2(0, 0), false);
-				this->bulletBelongsToPlayer = 0;
-				this->bulletSpawnTimer = 0;
-				this->bulletFired = false;
-				this->appleSpawned = false;
-				this->appleSpawnTimer = 0;
-				*/
+				if (enableButtonTimer)
+				{
+					printf("Button Pushed");
+				}
+				else
+				{
+					buttonTimer = 0;
+					enableButtonTimer = true;
+				}
+			}
+			else
+			{
+				enableButtonTimer = false;
 			}
 		}
 	}

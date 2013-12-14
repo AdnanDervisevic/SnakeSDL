@@ -48,6 +48,9 @@ private:
 	SDL_Surface* startScreen;
 	SDL_Surface* winnerScreen;
 
+	float buttonTimer;
+	bool enableButtonTimer;
+
 	bool gameStarted;
 
 	SDL_Surface* bulletTexture;
