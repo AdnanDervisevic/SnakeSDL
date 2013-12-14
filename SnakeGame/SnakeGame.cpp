@@ -315,6 +315,8 @@ void SnakeGame::HandleInput()
 	if (bulletFired)
 		return;
 
+	int pinValue;
+
 	if (!gameStarted)
 	{
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
@@ -335,9 +337,6 @@ void SnakeGame::HandleInput()
 	}
 	else
 	{
-		
-		int pinValue;
-
 		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
 		{
 			usleep(10000);
