@@ -118,9 +118,6 @@ bool SnakeGame::Initialize()
 
 	gameStarted = false;
 
-	// Set the rand time to NULL for true randomness.
-	srand(time(NULL));
-
 	// Set the volume of the music to 10%
 	Music::Volume(10);
 
