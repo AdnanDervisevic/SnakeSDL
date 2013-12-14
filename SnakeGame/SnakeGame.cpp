@@ -329,7 +329,7 @@ void SnakeGame::HandleInput()
 			if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 			{
 				player1.Turn(DIRECTION_DOWN);
-				printf("Turn Down\n");
+				//printf("Turn Down\n");
 			}
 		}
 
@@ -339,7 +339,7 @@ void SnakeGame::HandleInput()
 			if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 			{
 				player1.Turn(DIRECTION_RIGHT);
-				printf("Turn Right\n");
+				//printf("Turn Right\n");
 			}
 		}
 
@@ -366,7 +366,7 @@ void SnakeGame::HandleInput()
 
 void SnakeGame::Fire()
 {
-	//proj->Play(false);
+	proj->Play(false);
 	BodyPart& head = (this->bulletBelongsToPlayer == 1) ? this->player1.bodyParts.at(0) : this->player2.bodyParts.at(0);
 
 	if (head.Motion.X == 1 && head.Motion.Y == 0)
@@ -478,6 +478,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				this->coin->Play(false);
 			}
 
+			printf("%f - %d", this->appleSpawnTimer, this->appleSpawned);
 			this->appleSpawnTimer += elapsedGameTime;
 			if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
 			{
