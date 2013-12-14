@@ -76,7 +76,7 @@ bool Player::BodyCollides(const Rectangle& rect)
 }
 
 // Updates the player.
-void Player::Update(SoundEffect& soundEffect, float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player)
+void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player)
 {
 	if (!this->alive)
 		return;
@@ -107,7 +107,6 @@ void Player::Update(SoundEffect& soundEffect, float elapsedGameTime, Rectangle a
 			Vector2 pos(rect.x, rect.y);
 
 			Reset(pos, false);
-			soundEffect.Play(false);
 			break;
 		}
 }

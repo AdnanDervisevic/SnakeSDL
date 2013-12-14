@@ -183,12 +183,6 @@
     <ClInclude Include="Color.h">
       <Filter>Header Files\XNA</Filter>
     </ClInclude>
-    <ClInclude Include="SoundEffect.h">
-      <Filter>Header Files\XNA</Filter>
-    </ClInclude>
-    <ClInclude Include="Music.h">
-      <Filter>Header Files\XNA</Filter>
-    </ClInclude>
     <ClInclude Include="BodyPart.h">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
@@ -198,9 +192,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpriteBatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundEffect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Music.cpp">

@@ -62,7 +62,7 @@ bool SnakeGame::Initialize()
 		return false;
 
 	// Create our display surface.
-	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL)
+	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN )) == NULL)
 		return false;
 
 	if (TTF_Init() == -1)
@@ -98,36 +98,7 @@ bool SnakeGame::Initialize()
 	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
 
-	// Open the mixer, this is needed to play any audio.
-	if (Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS))
-		return false;
-
-	// Load the sound effect.
-	if ((proj = SoundEffect::Load("Assets/proj.wav")) == NULL)
-		return false;
-
-	if ((chomp = SoundEffect::Load("Assets/chomp.wav")) == NULL)
-		return false;
-
-	if ((coin = SoundEffect::Load("Assets/coin.wav")) == NULL)
-		return false;
-
-	// Load the background music, music is static because you can only play one song at the time.
-	if ((Music::Load("Assets/background.ogg")) == false)
-		return false;
-
 	gameStarted = false;
-
-	// Set the volume of the music to 10%
-	Music::Volume(10);
-
-	// Start the music and loop it.
-	Music::Play(true);
-
-	// Set the volume of the projectile effect.
-	//proj->Volume(30);
-	//coin->Volume(30);
-	//chomp->Volume(30);
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
@@ -363,7 +334,6 @@ void SnakeGame::HandleInput()
 
 void SnakeGame::Fire()
 {
-	proj->Play(false);
 	BodyPart& head = (this->bulletBelongsToPlayer == 1) ? this->player1.bodyParts.at(0) : this->player2.bodyParts.at(0);
 
 	if (head.Motion.X == 1 && head.Motion.Y == 0)
@@ -405,22 +375,15 @@ void SnakeGame::Update(float elapsedGameTime)
 	{
 		if (!bulletFired)
 		{
-			player1.Update(*chomp, elapsedGameTime, appleHitbox, bulletHitbox, player2);
-			player2.Update(*chomp, elapsedGameTime, appleHitbox, bulletHitbox, player1);
+			player1.Update(elapsedGameTime, appleHitbox, bulletHitbox, player2);
+			player2.Update(elapsedGameTime, appleHitbox, bulletHitbox, player1);
 
 			if (this->bulletBelongsToPlayer == 0)
 			{
 				if (this->player1.HeadCollides(this->bulletSpawnHitbox))
-				{
 					this->bulletBelongsToPlayer = 1;
-					this->coin->Play(false);
-				}
 				else if (this->player2.HeadCollides(this->bulletSpawnHitbox))
-				{
 					this->bulletBelongsToPlayer = 2;
-					printf("Player 2 picked up the bullet");
-					this->coin->Play(false);
-				}
 			}
 
 			bool player1EatsPlayer2 = player1.HeadCollides(player2);
@@ -430,7 +393,6 @@ void SnakeGame::Update(float elapsedGameTime)
 			{
 				player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
-				chomp->Play(false);
 			}
 			else if (player1EatsPlayer2 && !player2EatsPlayer1)
 			{
@@ -442,7 +404,6 @@ void SnakeGame::Update(float elapsedGameTime)
 				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 				Vector2 pos(rect.x, rect.y);
 				player1.Reset(pos, false);
-				chomp->Play(false);
 			}
 			else if (!player1EatsPlayer2 && player2EatsPlayer1)
 			{
@@ -454,7 +415,6 @@ void SnakeGame::Update(float elapsedGameTime)
 				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 				Vector2 pos(rect.x, rect.y);
 				player2.Reset(pos, false);
-				chomp->Play(false);
 			}
 
 			if (this->appleSpawned && player1.HeadCollides(this->appleHitbox))
@@ -463,7 +423,6 @@ void SnakeGame::Update(float elapsedGameTime)
 				player1.AddBodyPart();
 				this->appleSpawnTimer = 0;
 				this->appleSpawned = false;
-				this->coin->Play(false);
 			}
 			else if (this->appleSpawned && player2.HeadCollides(this->appleHitbox))
 			{
@@ -471,14 +430,11 @@ void SnakeGame::Update(float elapsedGameTime)
 				player2.AddBodyPart();
 				this->appleSpawnTimer = 0;
 				this->appleSpawned = false;
-				printf("Player 2 picked up the apple");
-				this->coin->Play(false);
 			}
 
 			this->appleSpawnTimer += elapsedGameTime;
 			if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
 			{
-				printf("Apple Spawn");
 				this->appleSpawned = true;
 
 				do
@@ -486,13 +442,10 @@ void SnakeGame::Update(float elapsedGameTime)
 					this->appleHitbox.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE);
 					this->appleHitbox.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
 				} while (this->appleHitbox.Intersects(this->bulletHitbox) || player1.Collides(this->appleHitbox) || player2.Collides(this->appleHitbox));
-
-				printf("X: %d Y: %d\n", this->appleHitbox.x, this->appleHitbox.y);
 			}
 		}
 		else
 		{
-			printf("Fire!");
 			this->bulletPosition.X += (this->bulletMotion.X * 120 * elapsedGameTime);
 			this->bulletPosition.Y += (this->bulletMotion.Y * 120 * elapsedGameTime);
 
@@ -524,7 +477,6 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
 					}
 					else if (this->player2.BodyCollides(this->bulletHitbox))
 					{
@@ -533,7 +485,6 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
 					}
 				}
 				else if (this->bulletBelongsToPlayer == 2)
@@ -553,7 +504,6 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
 					}
 					else if (this->player1.BodyCollides(this->bulletHitbox))
 					{
@@ -562,7 +512,6 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
 					}
 				}
 			}
@@ -673,25 +622,11 @@ void SnakeGame::Cleanup()
 	TTF_CloseFont(font);
 	font = NULL;
 
-	// Dispose the projectile sound effect.
-	proj->Dispose();
-	delete proj;
-
-	chomp->Dispose();
-	delete chomp;
-
-	coin->Dispose();
-	delete coin;
-
-	// Dispose the background music.
-	Music::Dispose();
-
 	//CLOSE JOYSTICK
 	if(stick == NULL)
 		SDL_JoystickClose(stick);
 
 	// Clean up variables.
-	Mix_CloseAudio(); // Close the audio
 	delete spriteBatch;
 	SDL_FreeSurface(backbuffer);
 	SDL_Quit();
