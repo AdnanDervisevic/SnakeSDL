@@ -133,7 +133,7 @@ bool SnakeGame::Initialize()
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
-	/*
+	
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
 		return false;
@@ -231,7 +231,7 @@ bool SnakeGame::Initialize()
 		}
 
 	} while (pinValue == -1);
-        */
+        
 	return true;
 }
 
@@ -317,7 +317,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput()
 {
-	/*
+	
 	int pinValue;
 
 
@@ -341,26 +341,24 @@ void SnakeGame::HandleInput()
 		}
 	}
 	
-	//int pinValue2;
+	int pinValue2;
 
-	//if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
-		//Fire();
+	if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+		Fire();
 
-	//printf("%i", pinValue);
+	printf("%i", pinValue);
 
-	//if (GPIORead(GPIO_BUTTONUP) == 0)
-		//player1.Turn(DIRECTION_UP);
-	/*
-	if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
+	if (GPIORead(GPIO_BUTTONUP) == 0)
+		player1.Turn(DIRECTION_UP);
+	else if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
 		player1.Turn(DIRECTION_DOWN);
 	else if ((pinValue2 =  GPIORead(GPIO_BUTTONRIGHT)) == 1)
 		player1.Turn(DIRECTION_RIGHT);
-	*/
-	/*else if (GPIORead(GPIO_BUTTONLEFT) == 0)
+	else if (GPIORead(GPIO_BUTTONLEFT) == 0)
 		player1.Turn(DIRECTION_LEFT);
-	*/
-	//printf("DOWN: %i\n", pinValue);
-	//printf("RIGHT: %i", pinValue2);
+	
+	printf("DOWN: %i\n", pinValue);
+	printf("RIGHT: %i", pinValue2);
 }
 
 void SnakeGame::Fire()
@@ -581,21 +579,21 @@ void SnakeGame::Draw(float elapsedGameTime)
 		{
 			if (player1.Score > player2.Score)
 			{
-				std::string message = "Score: " + std::to_string(this->player1.Score) + " over " + std::to_string(this->player2.Score);
+				//std::string message = "Score: " + std::to_string(this->player1.Score) + " over " + std::to_string(this->player2.Score);
 
 				// Player 1 wins:!
 				this->spriteBatch->Draw(this->winnerScreen, Vector2(0, 0));
 				this->spriteBatch->DrawString("Player 1 Wins", Vector2(200, 150), this->font, Color(255, 255, 255));
-				this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
+				//this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
 			}
 			else if (player1.Score < player2.Score)
 			{
 				// Player 2 Wins
-				std::string message = "Score: " + std::to_string(this->player2.Score) + " over " + std::to_string(this->player1.Score);
+				//std::string message = "Score: " + std::to_string(this->player2.Score) + " over " + std::to_string(this->player1.Score);
 
 				this->spriteBatch->Draw(this->winnerScreen, Vector2(0, 0));
 				this->spriteBatch->DrawString("Player 2 Wins", Vector2(200, 150), this->font, Color(255, 255, 255));
-				this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
+				//this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
 			}
 		}
 		else
@@ -623,12 +621,22 @@ void SnakeGame::Draw(float elapsedGameTime)
 		// Draws the players.
 		player1.Draw(elapsedGameTime, this->spriteBatch);
 		player2.Draw(elapsedGameTime, this->spriteBatch);
+	
+		char brownScore[32];
+		sprintf(brownScore, "%d", this->player1.Score);
 
-		std::string brownScore = "Brown Score: " + std::to_string(this->player1.Score);
-		std::string blueScore = "Blue Score: " + std::to_string(this->player2.Score);
+		char brownScoreString[124] = "Brown Score: ";
+
+		strcat(brownScoreString, brownScore);
+
+		char blueScore[32];
+		sprintf(blueScore, "%d", this->player1.Score);
+
+		char blueScoreString[124] = "Brown Score: ";
+		strcat(blueScore, blueScoreString);
 		
-		this->spriteBatch->DrawString(brownScore.c_str(), Vector2(2, 2), this->font, Color(255, 255, 255));
-		this->spriteBatch->DrawString(blueScore.c_str(), Vector2(2, SCREEN_HEIGHT - 22), this->font, Color(255, 255, 255));
+		this->spriteBatch->DrawString(brownScoreString, Vector2(2, 2), this->font, Color(255, 255, 255));
+		this->spriteBatch->DrawString(blueScoreString, Vector2(2, SCREEN_HEIGHT - 22), this->font, Color(255, 255, 255));
 	}
 
 	// Shows the backbuffer.
@@ -638,13 +646,13 @@ void SnakeGame::Draw(float elapsedGameTime)
 // Here we clean up and releases our resources.
 void SnakeGame::Cleanup()
 {
-	/*
+	
 	GPIOUnexport(GPIO_BUTTON);
 	GPIOUnexport(GPIO_BUTTONUP);
 	GPIOUnexport(GPIO_BUTTONDOWN);
 	GPIOUnexport(GPIO_BUTTONRIGHT);
 	GPIOUnexport(GPIO_BUTTONLEFT);
-	*/
+	
 	// Cleans up the players variables.
 	player1.Cleanup();
 	player2.Cleanup();

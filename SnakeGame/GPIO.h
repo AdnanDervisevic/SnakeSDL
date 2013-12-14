@@ -1,4 +1,3 @@
-/*
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -125,4 +124,3 @@ static int GPIOWrite(int pin, int value)
 	close(fd);
 	return(0);
 }
-*/
