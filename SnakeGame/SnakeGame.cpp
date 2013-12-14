@@ -243,7 +243,9 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 
 			// Om inte joystick är kopplad -- debugging
 		case SDL_KEYDOWN:
-			if (event->key.keysym.sym == SDLK_w)
+			if (event->key.keysym.sym == SDLK_ESCAPE)
+				running = false;
+			else if (event->key.keysym.sym == SDLK_w)
 				player1.Turn(DIRECTION_UP);
 			else if (event->key.keysym.sym == SDLK_s)
 				player1.Turn(DIRECTION_DOWN);
