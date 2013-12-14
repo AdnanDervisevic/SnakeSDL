@@ -100,7 +100,7 @@ bool SnakeGame::Initialize()
 	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
 
-	gameStarted = true;
+	gameStarted = false;
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
@@ -212,6 +212,23 @@ bool SnakeGame::Initialize()
 // Here we handle all the input coming from the SDL library.
 void SnakeGame::HandleSDLInput(SDL_Event* event)
 {
+	if (bulletFired)
+	{
+		switch (event->type)
+		{
+		case SQL_QUIT:
+			running = false;
+			break;
+			
+		case SDL_KEYDOWN:
+			if (event->key.keysym.sym == SDLK_ESCAPE)
+				running = false;
+			break;
+		}
+
+		return;
+	}
+
 	if (!gameStarted)
 	{
 		switch (event->type)
@@ -278,8 +295,6 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			// Access the hat movement - For arcade stick connected via USB, one of the movement options
 			if (stick != NULL)
 			{
-				printf("turning");
-
 				if (SDL_JoystickGetHat(stick, 0) == 0x01)
 					player2.Turn(DIRECTION_UP);
 				else if (SDL_JoystickGetHat(stick, 0) == 0x04)
@@ -297,7 +312,28 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput()
 {
-	if (gameStarted)
+	if (bulletFired)
+		return;
+
+	if (!gameStarted)
+	{
+		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+		{
+			usleep(10000);
+			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+			{
+				gameStarted = true;
+				player1.Reset(Vector2(0, 0), true);
+				player2.Reset(Vector2(0, 0), false);
+				this->bulletBelongsToPlayer = 0;
+				this->bulletSpawnTimer = 0;
+				this->bulletFired = false;
+				this->appleSpawned = false;
+				this->appleSpawnTimer = 0;
+			}
+		}
+	}
+	else
 	{
 		
 		int pinValue;
@@ -341,28 +377,6 @@ void SnakeGame::HandleInput()
 				//printf("Turn Left\n");
 			}
 		}
-		/*
-		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
-		{
-			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
-				Fire();
-		}
-		*/
-		//printf("%i", pinValue);
-		/*
-		int pinValue2;
-		if (GPIORead(GPIO_BUTTONUP) == 0)
-			player1.Turn(DIRECTION_UP);
-		else if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
-			player1.Turn(DIRECTION_DOWN);
-		else if ((pinValue2 = GPIORead(GPIO_BUTTONRIGHT)) == 1)
-			player1.Turn(DIRECTION_RIGHT);
-		else if (GPIORead(GPIO_BUTTONLEFT) == 0)
-			player1.Turn(DIRECTION_LEFT);
-*/
-		//printf("DOWN: %i\n", pinValue);
-		//printf("RIGHT: %i", pinValue2);
 	}
 }
 
