@@ -31,9 +31,9 @@ public:
 
 	static int Roll(int min, int max)
 	{
-		//return rand() % (max + 1) + min;
+		return rand() % (max + 1) + min;
 
-	   return min + static_cast<int>( rand() / static_cast<double>(0x7fff) * (max - min) );
+	   //return min + static_cast<int>( rand() / static_cast<double>(0x7fff) * (max - min) );
 	}
 
 	SoundEffect* chomp;
