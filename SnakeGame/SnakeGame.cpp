@@ -318,53 +318,55 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput()
 {
-	
-	int pinValue;
-
-
-	if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+	if (gameStarted)
 	{
-		usleep(10000);
+		int pinValue;
+
+
 		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 		{
-			player1.Turn(DIRECTION_DOWN);
-			printf("Turn Down\n");
+			usleep(10000);
+			if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+			{
+				player1.Turn(DIRECTION_DOWN);
+				printf("Turn Down\n");
+			}
 		}
-	}
 
-	if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
-	{
-		usleep(10000);
 		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 		{
-			player1.Turn(DIRECTION_RIGHT);
-			printf("Turn Right\n");
+			usleep(10000);
+			if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
+			{
+				player1.Turn(DIRECTION_RIGHT);
+				printf("Turn Right\n");
+			}
 		}
+
+		int pinValue2;
+
+		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+			Fire();
+
+		//printf("%i", pinValue);
+		/*
+		if (GPIORead(GPIO_BUTTONUP) == 0)
+			player1.Turn(DIRECTION_UP);
+		else if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
+			player1.Turn(DIRECTION_DOWN);
+		else if ((pinValue2 = GPIORead(GPIO_BUTTONRIGHT)) == 1)
+			player1.Turn(DIRECTION_RIGHT);
+		else if (GPIORead(GPIO_BUTTONLEFT) == 0)
+			player1.Turn(DIRECTION_LEFT);
+*/
+		printf("DOWN: %i\n", pinValue);
+		printf("RIGHT: %i", pinValue2);
 	}
-	
-	int pinValue2;
-
-	if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
-		Fire();
-
-	printf("%i", pinValue);
-
-	if (GPIORead(GPIO_BUTTONUP) == 0)
-		player1.Turn(DIRECTION_UP);
-	else if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
-		player1.Turn(DIRECTION_DOWN);
-	else if ((pinValue2 =  GPIORead(GPIO_BUTTONRIGHT)) == 1)
-		player1.Turn(DIRECTION_RIGHT);
-	else if (GPIORead(GPIO_BUTTONLEFT) == 0)
-		player1.Turn(DIRECTION_LEFT);
-	
-	printf("DOWN: %i\n", pinValue);
-	printf("RIGHT: %i", pinValue2);
 }
 
 void SnakeGame::Fire()
 {
-	proj->Play(false);
+	//proj->Play(false);
 	BodyPart& head = (this->bulletBelongsToPlayer == 1) ? this->player1.bodyParts.at(0) : this->player2.bodyParts.at(0);
 
 	if (head.Motion.X == 1 && head.Motion.Y == 0)
@@ -414,12 +416,12 @@ void SnakeGame::Update(float elapsedGameTime)
 				if (this->player1.HeadCollides(this->bulletSpawnHitbox))
 				{
 					this->bulletBelongsToPlayer = 1;
-					this->coin->Play(false);
+					//this->coin->Play(false);
 				}
 				else if (this->player2.HeadCollides(this->bulletSpawnHitbox))
 				{
 					this->bulletBelongsToPlayer = 2;
-					this->coin->Play(false);
+					//this->coin->Play(false);
 				}
 			}
 
@@ -430,7 +432,7 @@ void SnakeGame::Update(float elapsedGameTime)
 			{
 				player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
-				chomp->Play(false);
+				//chomp->Play(false);
 			}
 			else if (player1EatsPlayer2 && !player2EatsPlayer1)
 			{
@@ -442,7 +444,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 				Vector2 pos(rect.x, rect.y);
 				player1.Reset(pos, false);
-				chomp->Play(false);
+				//chomp->Play(false);
 			}
 			else if (!player1EatsPlayer2 && player2EatsPlayer1)
 			{
@@ -454,7 +456,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 				Vector2 pos(rect.x, rect.y);
 				player2.Reset(pos, false);
-				chomp->Play(false);
+				//chomp->Play(false);
 			}
 
 			if (this->appleSpawned && player1.HeadCollides(this->appleHitbox))
@@ -463,7 +465,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				player1.AddBodyPart();
 				this->appleSpawnTimer = 0;
 				this->appleSpawned = false;
-				this->coin->Play(false);
+				//this->coin->Play(false);
 			}
 			else if (this->appleSpawned && player2.HeadCollides(this->appleHitbox))
 			{
@@ -471,7 +473,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				player2.AddBodyPart();
 				this->appleSpawnTimer = 0;
 				this->appleSpawned = false;
-				this->coin->Play(false);
+				//this->coin->Play(false);
 			}
 
 			this->appleSpawnTimer += elapsedGameTime;
@@ -519,7 +521,7 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
+						//chomp->Play(false);
 					}
 					else if (this->player2.BodyCollides(this->bulletHitbox))
 					{
@@ -528,7 +530,7 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
+						//chomp->Play(false);
 					}
 				}
 				else if (this->bulletBelongsToPlayer == 2)
@@ -548,7 +550,7 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
+						//chomp->Play(false);
 					}
 					else if (this->player1.BodyCollides(this->bulletHitbox))
 					{
@@ -557,7 +559,7 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
-						chomp->Play(false);
+						//chomp->Play(false);
 					}
 				}
 			}
