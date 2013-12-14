@@ -478,7 +478,6 @@ void SnakeGame::Update(float elapsedGameTime)
 				this->coin->Play(false);
 			}
 
-			printf("%d\n", this->appleSpawned);
 			this->appleSpawnTimer += elapsedGameTime;
 			if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
 			{
@@ -490,6 +489,8 @@ void SnakeGame::Update(float elapsedGameTime)
 					this->appleHitbox.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE);
 					this->appleHitbox.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
 				} while (this->appleHitbox.Intersects(this->bulletHitbox) || player1.Collides(this->appleHitbox) || player2.Collides(this->appleHitbox));
+
+				printf("X: %d Y: %d\n", this->appleHitbox.x, this->appleHitbox.y);
 			}
 		}
 		else
