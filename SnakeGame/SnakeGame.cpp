@@ -530,6 +530,8 @@ void SnakeGame::Draw(float elapsedGameTime)
 	// Clears the backbuffer.
 	SDL_FillRect(backbuffer, NULL, SDL_MapRGB(backbuffer->format, 0, 0, 0));
 
+	this->spriteBatch->DrawString(SDL_JoystickName(0), Vector2(300, 300), this->font, Color(255, 255, 255));
+
 	if (!gameStarted)
 	{
 		if (player1.Score > 0 || player2.Score > 0)
