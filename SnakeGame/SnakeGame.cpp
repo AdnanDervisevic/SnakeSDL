@@ -102,8 +102,9 @@ bool SnakeGame::Initialize()
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
-	if (stick == NULL && SDL_NumJoysticks != 0)
-		stick = SDL_JoystickOpen(1);
+
+	if (stick == NULL)
+		return false;
 	
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
@@ -309,6 +310,15 @@ void SnakeGame::HandleInput()
 	{
 		int pinValue;
 
+		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
+		{
+			usleep(10000);
+			if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
+			{
+				player1.Turn(DIRECTION_UP);
+				//printf("Turn Up\n");
+			}
+		}
 
 		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 		{
@@ -330,13 +340,26 @@ void SnakeGame::HandleInput()
 			}
 		}
 
-		int pinValue2;
-
-		//if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
-		//	Fire();
-
+		if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
+		{
+			usleep(10000);
+			if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
+			{
+				player1.Turn(DIRECTION_LEFT);
+				//printf("Turn Left\n");
+			}
+		}
+		/*
+		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+		{
+			usleep(10000);
+			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
+				Fire();
+		}
+		*/
 		//printf("%i", pinValue);
 		/*
+		int pinValue2;
 		if (GPIORead(GPIO_BUTTONUP) == 0)
 			player1.Turn(DIRECTION_UP);
 		else if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 1)
