@@ -104,13 +104,6 @@ bool SnakeGame::Initialize()
 		stick = SDL_JoystickOpen(0);
 	if (stick == NULL && SDL_NumJoysticks != 0)
 		stick = SDL_JoystickOpen(1);
-
-	if (SDL_JoystickOpened)
-		printf("Joystick has been opened for operatin");
-
-	
-	if (stick != NULL)
-		printf("connected stick");
 	
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
@@ -243,7 +236,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	}
 	else
 	{
-		printf("Event Update");
+		printf("Event Update\n");
 
 		// Check if we want to quit
 		switch (event->type)
@@ -298,15 +291,11 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			break;
 
 		case SDL_JOYAXISMOTION:
+			printf("AXIS\n");
 			if (stick != NULL)
-			{
-				printf("AXIS");				
-
-
+			{	
 				if (SDL_JoystickGetAxis(stick, 0) < 0)
 					player1.Turn(DIRECTION_DOWN);
-
-				
 			}
 			break;
 		}
@@ -557,8 +546,6 @@ void SnakeGame::Draw(float elapsedGameTime)
 {
 	// Clears the backbuffer.
 	SDL_FillRect(backbuffer, NULL, SDL_MapRGB(backbuffer->format, 0, 0, 0));
-
-	this->spriteBatch->DrawString(SDL_JoystickName(0), Vector2(300, 300), this->font, Color(255, 255, 255));
 
 	if (!gameStarted)
 	{
