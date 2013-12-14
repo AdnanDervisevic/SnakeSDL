@@ -102,6 +102,12 @@ bool SnakeGame::Initialize()
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
+	if (stick == NULL && SDL_NumJoysticks != 0)
+		stick = SDL_JoystickOpen(1);
+
+	if (SDL_JoystickOpened)
+		printf("Joystick has been opened for operatin");
+
 	
 	if (stick != NULL)
 		printf("connected stick");
@@ -636,7 +642,7 @@ void SnakeGame::Cleanup()
 	font = NULL;
 
 	//CLOSE JOYSTICK
-	if(stick == NULL)
+	if(stick != NULL)
 		SDL_JoystickClose(stick);
 
 	// Clean up variables.
