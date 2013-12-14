@@ -216,7 +216,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	{
 		switch (event->type)
 		{
-		case SQL_QUIT:
+		case SDL_QUIT:
 			running = false;
 			break;
 			
