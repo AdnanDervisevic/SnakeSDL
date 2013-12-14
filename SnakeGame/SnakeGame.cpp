@@ -280,10 +280,8 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 			// Access the hat movement - For arcade stick connected via USB, one of the movement options
 			printf("joy motion init");
 
-
 			if (stick != NULL)
 			{
-
 				printf("turning");
 
 				if (SDL_JoystickGetHat(stick, 0) == 0x01)
@@ -294,6 +292,15 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 					player1.Turn(DIRECTION_LEFT);
 				else if (SDL_JoystickGetHat(stick, 0) == 0x02 || SDL_JoystickGetHat(stick, 0) == (0x02 | 0x04) || SDL_JoystickGetHat(stick, 0) == (0x02 | 0x01))
 					player1.Turn(DIRECTION_RIGHT);
+			}
+			break;
+
+		case SDL_JOYAXISMOTION:
+			if (stick != NULL)
+			{
+
+				if ((SDL_JoystickGetAxis, 0) < 0)
+					player1.Turn(DIRECTION_LEFT);
 			}
 			break;
 		}
