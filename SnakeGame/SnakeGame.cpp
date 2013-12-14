@@ -318,7 +318,7 @@ void SnakeGame::HandleInput()
 	int pinValue;
 
 	if (!gameStarted)
-	{
+	{/*
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 		{
 			usleep(10000);
@@ -336,10 +336,8 @@ void SnakeGame::HandleInput()
 				this->appleSpawned = false;
 				this->appleSpawnTimer = 0;
 				*/
-			}
-		}
-
-		printf("%d", pinValue);
+			/*}
+		}*/
 	}
 	else
 	{
