@@ -3,8 +3,8 @@
 
 #define WINDOW_TITLE "Snake"
 
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1080
+#define SCREEN_WIDTH 852
+#define SCREEN_HEIGHT 480
 #define SCREEN_BPP 32
 
 #define AUDIO_RATE 22050
@@ -22,6 +22,6 @@
 #define APPLE_SCORE 100
 #define REMOVEBODYPART_SCORE 100
 
-#define WINNER_SCORE 1000
+#define WINNER_SCORE 2500
 
 #endif
