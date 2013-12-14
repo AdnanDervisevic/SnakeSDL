@@ -243,6 +243,8 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	}
 	else
 	{
+		printf("Event Update");
+
 		// Check if we want to quit
 		switch (event->type)
 		{
@@ -298,9 +300,13 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 		case SDL_JOYAXISMOTION:
 			if (stick != NULL)
 			{
+				printf("AXIS");				
 
-				if ((SDL_JoystickGetAxis, 0) < 0)
-					player1.Turn(DIRECTION_LEFT);
+
+				if (SDL_JoystickGetAxis(stick, 0) < 0)
+					player1.Turn(DIRECTION_DOWN);
+
+				
 			}
 			break;
 		}
