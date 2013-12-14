@@ -1,6 +1,7 @@
 #include "SnakeGame.h"
 #include "GPIO.h"
 #include <iostream>
+#include <cstring>
 
 // Creates a new Snake object.
 SnakeGame::SnakeGame() : 
