@@ -8,7 +8,8 @@
 SnakeGame::SnakeGame() : 
 	bulletSpawnHitbox(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 - 10, 20, 20), 
 	bulletBelongsToPlayer(0), bulletSpawnTimer(0), bulletHitbox(0, 0, 20, 20), bulletMotion(0, 0), bulletPosition(0, 0),
-	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false)
+	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false), 
+	buttonDebounce(0), buttonDebounceTimer(0)
 {
 	backbuffer = NULL;
 	spriteBatch = NULL;
@@ -310,7 +311,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 }
 
 // Here we handle all the input not coming from the SDL.
-void SnakeGame::HandleInput()
+void SnakeGame::HandleInput(float gameTime)
 {
 	if (bulletFired)
 		return;
@@ -318,10 +319,28 @@ void SnakeGame::HandleInput()
 	int pinValue;
 
 	if (!gameStarted)
-	{/*
+	{
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
+		{	
+			buttonMinusDebounce = 0;
+			buttonPlusDebounce++;
+			buttonDebounceTimer += gameTime;
+			if (buttonDebounceTimer >= 0.3)
+			{
+				
+			}
+		}
+		else
 		{
-			usleep(10000);
+			buttonMinusDebounce--;
+		}
+
+
+
+
+
+
+			
 			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 			{
 
@@ -336,8 +355,8 @@ void SnakeGame::HandleInput()
 				this->appleSpawned = false;
 				this->appleSpawnTimer = 0;
 				*/
-			/*}
-		}*/
+			}
+		}
 	}
 	else
 	{
