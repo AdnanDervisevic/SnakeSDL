@@ -62,7 +62,7 @@ bool SnakeGame::Initialize()
 		return false;
 
 	// Create our display surface.
-	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN )) == NULL)
+	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF )) == NULL)
 		return false;
 
 	if (TTF_Init() == -1)
@@ -102,6 +102,9 @@ bool SnakeGame::Initialize()
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
+	
+	if (stick != NULL)
+		printf("connected stick");
 	
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
@@ -269,8 +272,14 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 
 		case SDL_JOYHATMOTION:
 			// Access the hat movement - For arcade stick connected via USB, one of the movement options
+			printf("joy motion init");
+
+
 			if (stick != NULL)
 			{
+
+				printf("turning");
+
 				if (SDL_JoystickGetHat(stick, 0) == 0x01)
 					player1.Turn(DIRECTION_UP);
 				else if (SDL_JoystickGetHat(stick, 0) == 0x04)
