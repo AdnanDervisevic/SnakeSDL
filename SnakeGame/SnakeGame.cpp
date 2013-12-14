@@ -319,11 +319,11 @@ void SnakeGame::HandleInput()
 
 	if (!gameStarted)
 	{
-		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
+		if ((pinValue = GPIORead(GPIO_BUTTON)) == 1)
 		{
 			printf("Button Check");
 			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
+			if ((pinValue = GPIORead(GPIO_BUTTON)) == 1)
 			{
 				gameStarted = true;
 				player1.Reset(Vector2(0, 0), true);
@@ -335,6 +335,8 @@ void SnakeGame::HandleInput()
 				this->appleSpawnTimer = 0;
 			}
 		}
+
+		printf("%d", pinValue);
 	}
 	else
 	{
