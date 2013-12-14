@@ -107,7 +107,7 @@ bool SnakeGame::Initialize()
 
 	if (stick == NULL)
 		return false;
-	/*
+	
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
 		return false;
@@ -205,7 +205,7 @@ bool SnakeGame::Initialize()
 		}
 
 	} while (pinValue == -1);
-        */
+        
 	return true;
 }
 
@@ -276,8 +276,6 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 
 		case SDL_JOYHATMOTION:
 			// Access the hat movement - For arcade stick connected via USB, one of the movement options
-			printf("joy motion init");
-
 			if (stick != NULL)
 			{
 				printf("turning");
@@ -292,15 +290,6 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 					player1.Turn(DIRECTION_RIGHT);
 			}
 			break;
-
-		case SDL_JOYAXISMOTION:
-			printf("AXIS\n");
-			if (stick != NULL)
-			{	
-				if (SDL_JoystickGetAxis(stick, 0) < 0)
-					player1.Turn(DIRECTION_DOWN);
-			}
-			break;
 		}
 	}
 }
@@ -310,7 +299,7 @@ void SnakeGame::HandleInput()
 {
 	if (gameStarted)
 	{
-		/*
+		
 		int pinValue;
 
 		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
@@ -351,7 +340,7 @@ void SnakeGame::HandleInput()
 				player1.Turn(DIRECTION_LEFT);
 				//printf("Turn Left\n");
 			}
-		}*/
+		}
 		/*
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0 && this->bulletBelongsToPlayer > 0)
 		{
@@ -646,13 +635,13 @@ void SnakeGame::Draw(float elapsedGameTime)
 // Here we clean up and releases our resources.
 void SnakeGame::Cleanup()
 {
-	/*
+	
 	GPIOUnexport(GPIO_BUTTON);
 	GPIOUnexport(GPIO_BUTTONUP);
 	GPIOUnexport(GPIO_BUTTONDOWN);
 	GPIOUnexport(GPIO_BUTTONRIGHT);
 	GPIOUnexport(GPIO_BUTTONLEFT);
-	*/
+	
 	// Cleans up the players variables.
 	player1.Cleanup();
 	player2.Cleanup();
