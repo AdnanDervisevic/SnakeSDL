@@ -105,8 +105,8 @@ bool SnakeGame::Initialize()
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
 
-	if (stick == NULL)
-		return false;
+	//if (stick == NULL)
+		//return false;
 	
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
