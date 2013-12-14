@@ -338,9 +338,10 @@ void SnakeGame::HandleInput()
 	}
 	else
 	{
+		/*
 		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
 		{
-			printf("Up Check");
+			printf("Up Check\n");
 			usleep(10000);
 			if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
 			{
@@ -348,10 +349,10 @@ void SnakeGame::HandleInput()
 				printf("Turn Up\n");
 			}
 		}
-
+		*/
 		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 		{
-			printf("Down Check");
+			printf("Down Check\n");
 			usleep(10000);
 			if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 			{
@@ -360,9 +361,11 @@ void SnakeGame::HandleInput()
 			}
 		}
 
+		printf("%d\n", pinValue);
+		/*
 		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 		{
-			printf("Right Check");
+			printf("Right Check\n");
 			usleep(10000);
 			if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 			{
@@ -373,14 +376,14 @@ void SnakeGame::HandleInput()
 
 		if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
 		{
-			printf("Left Check");
+			printf("Left Check\n");
 			usleep(10000);
 			if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
 			{
 				player1.Turn(DIRECTION_LEFT);
 				printf("Turn Left\n");
 			}
-		}
+		}*/
 	}
 }
 
