@@ -21,7 +21,7 @@ public:
 	int Run();
 	bool Initialize();
 	void HandleSDLInput(SDL_Event* event);
-	void HandleInput();
+	void HandleInput(float elapsedGameTime);
 	void Update(float elapsedGameTime);
 	void Draw(float elapsedGameTime);
 	void Cleanup();
@@ -46,7 +46,8 @@ private:
 	Player player2;
 
 	SDL_Surface* startScreen;
-	SDL_Surface* winnerScreen;
+	SDL_Surface* brownWinnerScreen;
+	SDL_Surface* blueWinnerScreen;
 
 	float buttonTimer;
 	bool enableButtonTimer;
@@ -57,6 +58,14 @@ private:
 	Rectangle bulletSpawnHitbox;
 	int bulletBelongsToPlayer;
 	float bulletSpawnTimer;
+
+	SDL_Surface* mouseTexture;
+	Rectangle mouseSpawnHitbox;
+	float mouseSpawnTimer;
+	float mouseNextSpawnTime;
+	bool mouseSpawned;
+	Vector2 mouseMotion;
+	Vector2 mousePosition;
 
 	Vector2 bulletPosition;
 	Vector2 bulletMotion;

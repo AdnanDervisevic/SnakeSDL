@@ -13,7 +13,7 @@ public:
 
 	bool Initialize(Vector2 position, SDL_Surface* headTexture, SDL_Surface* bodyTexture, SDL_Surface* tailTexture);
 	void HandleInput();
-	void Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player);
+	void Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Rectangle mouseHitbox, Player player);
 	void Draw(float elapsedGameTime, SpriteBatch* spriteBatch);
 	void Cleanup();
 
@@ -37,6 +37,9 @@ private:
 	SDL_Surface* bodyTexture;
 	SDL_Surface* tailTexture;
 	bool alive;
+
+	float outsideTimer;
+	bool outsideTimerEnabled;
 };
 
 #endif

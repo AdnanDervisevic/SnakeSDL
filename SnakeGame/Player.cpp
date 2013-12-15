@@ -76,7 +76,7 @@ bool Player::BodyCollides(const Rectangle& rect)
 }
 
 // Updates the player.
-void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Player player)
+void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bulletHitbox, Rectangle mouseHitbox, Player player)
 {
 	if (!this->alive)
 		return;
@@ -97,18 +97,52 @@ void Player::Update(float elapsedGameTime, Rectangle appleHitbox, Rectangle bull
 	// Check if you're eating yourself = you die.
 	BodyPart& head = this->bodyParts.at(0);
 	for (std::vector<BodyPart>::iterator bodyPart = bodyParts.begin() + 2; bodyPart != bodyParts.end(); bodyPart++)
+	{
 		if (head.BoundingBox.Intersects(bodyPart->BoundingBox))
 		{
 			Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
 			{
 				rect.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
 				rect.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
-			} while (rect.Intersects(appleHitbox) || rect.Intersects(bulletHitbox) || player.Collides(rect));
+			} while (rect.Intersects(appleHitbox) || rect.Intersects(mouseHitbox) || rect.Intersects(bulletHitbox) || player.Collides(rect));
 			Vector2 pos(rect.x, rect.y);
 
 			Reset(pos, false);
 			break;
 		}
+	}
+
+
+	// Check if you're outside of the map and have been for over 5 seconds.
+	if (head.Position.X > SCREEN_WIDTH || head.Position.X < 0 - head.BoundingBox.w || head.Position.Y > SCREEN_HEIGHT || head.Position.Y < 0 - head.BoundingBox.h)
+	{
+		if (this->outsideTimerEnabled)
+		{
+			this->outsideTimer += elapsedGameTime;
+			if (this->outsideTimer >= 5)
+			{
+				this->outsideTimerEnabled = false;
+				Rectangle rect(0, 0, BODYSIZE * 2, BODYSIZE);
+				do
+				{
+					rect.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
+					rect.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
+				} while (rect.Intersects(appleHitbox) || rect.Intersects(mouseHitbox) || rect.Intersects(bulletHitbox) || player.Collides(rect));
+				Vector2 pos(rect.x, rect.y);
+				Reset(pos, false);
+			}
+		}
+
+		if (!this->outsideTimerEnabled)
+		{
+			this->outsideTimerEnabled = true;
+			this->outsideTimer = 0;
+		}
+	}
+	else
+	{
+		this->outsideTimerEnabled = false;
+	}
 }
 
 // Draws the player.

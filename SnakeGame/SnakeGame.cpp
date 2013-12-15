@@ -5,10 +5,11 @@
 #include <stdio.h>
 
 // Creates a new Snake object.
-SnakeGame::SnakeGame() : 
-	bulletSpawnHitbox(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 - 10, 20, 20), 
+SnakeGame::SnakeGame() :
+	bulletSpawnHitbox(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 - 10, 20, 20),
 	bulletBelongsToPlayer(0), bulletSpawnTimer(0), bulletHitbox(0, 0, 20, 20), bulletMotion(0, 0), bulletPosition(0, 0),
-	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false), 
+	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false),
+	mouseSpawnHitbox(0, 0, 18, 18), mouseSpawnTimer(0), mouseSpawned(false), mouseNextSpawnTime(0), mouseMotion(0, 0), mousePosition(0, 0),
 	buttonTimer(0), enableButtonTimer(false)
 {
 	backbuffer = NULL;
@@ -16,6 +17,7 @@ SnakeGame::SnakeGame() :
 	running = true;
 	this->bulletFired = false;
 	this->stick = NULL;
+	this->mouseTexture = NULL;
 }
 
 // This method is called to run the game.
@@ -42,7 +44,7 @@ int SnakeGame::Run()
 			HandleSDLInput(&event);
 
 		// Hand regular input.
-		HandleInput();
+		HandleInput(dt);
 
 		// Update and Draw the game.
 		Update(dt);
@@ -85,30 +87,38 @@ bool SnakeGame::Initialize()
 	if (player2.Initialize(Vector2(200, SCREEN_HEIGHT - BODYSIZE), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png")) == false)
 		return false;
 
-	if ((bulletTexture = Texture::Load("Assets/bullet.png")) == NULL)
+	if ((this->bulletTexture = Texture::Load("Assets/bullet.png")) == NULL)
 		return false;
 
-	if ((appleTexture = Texture::Load("Assets/apple.png")) == NULL)
+	if ((this->appleTexture = Texture::Load("Assets/apple.png")) == NULL)
 		return false;
 
-	if ((startScreen = Texture::Load("Assets/startScreen.png")) == NULL)
+	if ((this->startScreen = Texture::Load("Assets/startScreen.png")) == NULL)
 		return false;
 
-	if ((winnerScreen = Texture::Load("Assets/winnerScreen.png")) == NULL)
+	if ((this->brownWinnerScreen = Texture::Load("Assets/brownWinnerScreen.png")) == NULL)
+		return false;
+
+	if ((this->blueWinnerScreen = Texture::Load("Assets/blueWinnerScreen.png")) == NULL)
+		return false;
+
+	if ((this->mouseTexture = Texture::Load("Assets/mouse.png")) == NULL)
 		return false;
 
 	// Loads a font using the SpriteFont helper.
 	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
 
-	gameStarted = false;
+	this->gameStarted = false;
+
+	this->mouseNextSpawnTime = SnakeGame::Roll(10, 40);
 
 	if(SDL_NumJoysticks() != 0)
 		stick = SDL_JoystickOpen(0);
 
 	//if (stick == NULL)
 		//return false;
-	
+
 	// Enabled GPIO pins
 	if (GPIOExport(GPIO_BUTTON) == -1)
 		return false;
@@ -206,7 +216,7 @@ bool SnakeGame::Initialize()
 		}
 
 	} while (pinValue == -1);
-        
+
 	return true;
 }
 
@@ -311,7 +321,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 }
 
 // Here we handle all the input not coming from the SDL.
-void SnakeGame::HandleInput(float gameTime)
+void SnakeGame::HandleInput(float elapsedGameTime)
 {
 	if (bulletFired)
 		return;
@@ -320,7 +330,7 @@ void SnakeGame::HandleInput(float gameTime)
 
 	if (!gameStarted)
 	{
-		buttonTimer += gameTime;
+		buttonTimer += elapsedGameTime;
 
 		if (buttonTimer >= 0.3)
 		{
@@ -355,7 +365,6 @@ void SnakeGame::HandleInput(float gameTime)
 				printf("Turn Up\n");
 			}
 		}
-		*/
 		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 		{
 			printf("Down Check\n");
@@ -368,7 +377,7 @@ void SnakeGame::HandleInput(float gameTime)
 		}
 
 		printf("%d\n", pinValue);
-		/*
+
 		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
 		{
 			printf("Right Check\n");
@@ -436,8 +445,8 @@ void SnakeGame::Update(float elapsedGameTime)
 	{
 		if (!bulletFired)
 		{
-			player1.Update(elapsedGameTime, appleHitbox, bulletHitbox, player2);
-			player2.Update(elapsedGameTime, appleHitbox, bulletHitbox, player1);
+			player1.Update(elapsedGameTime, appleHitbox, bulletHitbox, mouseSpawnHitbox, player2);
+			player2.Update(elapsedGameTime, appleHitbox, bulletHitbox, mouseSpawnHitbox, player1);
 
 			if (this->bulletBelongsToPlayer == 0)
 			{
@@ -462,7 +471,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				{
 					rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
 					rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->mouseSpawnHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 				Vector2 pos(rect.x, rect.y);
 				player1.Reset(pos, false);
 			}
@@ -473,7 +482,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				{
 					rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
 					rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+				} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->mouseSpawnHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 				Vector2 pos(rect.x, rect.y);
 				player2.Reset(pos, false);
 			}
@@ -493,6 +502,99 @@ void SnakeGame::Update(float elapsedGameTime)
 				this->appleSpawned = false;
 			}
 
+			if (this->mouseSpawned)
+			{
+				if (this->player1.HeadCollides(this->mouseSpawnHitbox))
+				{
+					this->player1.Score += MOUSE_SCORE;
+					this->player1.AddBodyPart();
+					this->player1.AddBodyPart();
+					this->mouseNextSpawnTime = SnakeGame::Roll(10, 40);
+					this->mouseSpawnTimer = 0;
+					this->mouseSpawned = false;
+				}
+				else if (this->player2.HeadCollides(this->mouseSpawnHitbox))
+				{
+					this->player2.Score += MOUSE_SCORE;
+					this->player2.AddBodyPart();
+					this->player2.AddBodyPart();
+					this->mouseNextSpawnTime = SnakeGame::Roll(10, 40);
+					this->mouseSpawnTimer = 0;
+					this->mouseSpawned = false;
+				}
+			}
+			
+			this->mouseSpawnTimer += elapsedGameTime;
+			if (this->mouseSpawned && this->mouseSpawnTimer >= this->mouseNextSpawnTime)
+			{
+				this->mousePosition.X += (this->mouseMotion.X * 120 * elapsedGameTime);
+				this->mousePosition.Y += (this->mouseMotion.Y * 120 * elapsedGameTime);
+
+				this->mouseSpawnHitbox.x = static_cast<int>(this->mousePosition.X);
+				this->mouseSpawnHitbox.y = static_cast<int>(this->mousePosition.Y);
+
+				if (this->mousePosition.X > SCREEN_WIDTH || this->mousePosition.X < 0 - this->mouseSpawnHitbox.w || this->mousePosition.Y > SCREEN_HEIGHT || this->mousePosition.Y < 0 - this->mouseSpawnHitbox.h)
+				{
+					this->mouseNextSpawnTime = SnakeGame::Roll(10, 40);
+					this->mouseSpawnTimer = 0;
+					this->mouseSpawned = false;
+				}
+			}
+
+			if (!this->mouseSpawned && this->mouseSpawnTimer >= this->mouseNextSpawnTime)
+			{
+				do
+				{
+					if (SnakeGame::Roll(1, 10) > 5)
+					{
+						// Spawn to the long sides.
+						if (SnakeGame::Roll(1, 10) > 5)
+						{
+							// Upp
+							this->mouseSpawnHitbox.y = 60;
+							this->mouseSpawnHitbox.x = SnakeGame::Roll(60, SCREEN_WIDTH - 60 - this->mouseSpawnHitbox.w);
+							this->mouseMotion.X = 0;
+							this->mouseMotion.Y = -1;
+						}
+						else
+						{
+							// Down
+							this->mouseSpawnHitbox.y = SCREEN_HEIGHT - 60 - this->mouseSpawnHitbox.h;
+							this->mouseSpawnHitbox.x = SnakeGame::Roll(60, SCREEN_WIDTH - 60 - this->mouseSpawnHitbox.w);
+							this->mouseMotion.X = 0;
+							this->mouseMotion.Y = 1;
+						}
+					}
+					else
+					{
+						// Spawn to the short sides.
+						if (SnakeGame::Roll(1, 10) > 5)
+						{
+							// Right
+							this->mouseSpawnHitbox.y = SnakeGame::Roll(60, SCREEN_HEIGHT - 60 - this->mouseSpawnHitbox.h);
+							this->mouseSpawnHitbox.x = 60;
+							this->mouseMotion.X = -1;
+							this->mouseMotion.Y = 0;
+						}
+						else
+						{
+							// Left
+							this->mouseSpawnHitbox.y = SnakeGame::Roll(60, SCREEN_HEIGHT - 60 - this->mouseSpawnHitbox.h);
+							this->mouseSpawnHitbox.x = SCREEN_WIDTH - 60 - this->mouseSpawnHitbox.w;
+							this->mouseMotion.X = 1;
+							this->mouseMotion.Y = 0;
+						}
+					}
+
+					this->mousePosition.X = this->mouseSpawnHitbox.x;
+					this->mousePosition.Y = this->mouseSpawnHitbox.y;
+				} while (this->mouseSpawnHitbox.Intersects(this->bulletHitbox) || this->mouseSpawnHitbox.Intersects(this->appleHitbox) || player1.Collides(this->mouseSpawnHitbox) || player2.Collides(this->mouseSpawnHitbox));
+
+				this->mouseNextSpawnTime = 5;
+				this->mouseSpawned = true;
+				this->mouseSpawnTimer = 0;
+			}
+
 			this->appleSpawnTimer += elapsedGameTime;
 			if (this->appleSpawnTimer >= 3 && !this->appleSpawned)
 			{
@@ -502,7 +604,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				{
 					this->appleHitbox.x = SnakeGame::Roll(0, SCREEN_WIDTH - BODYSIZE);
 					this->appleHitbox.y = SnakeGame::Roll(0, SCREEN_HEIGHT - BODYSIZE);
-				} while (this->appleHitbox.Intersects(this->bulletHitbox) || player1.Collides(this->appleHitbox) || player2.Collides(this->appleHitbox));
+				} while (this->appleHitbox.Intersects(this->bulletHitbox) || this->appleHitbox.Intersects(this->mouseSpawnHitbox) || player1.Collides(this->appleHitbox) || player2.Collides(this->appleHitbox));
 			}
 		}
 		else
@@ -531,7 +633,7 @@ void SnakeGame::Update(float elapsedGameTime)
 						{
 							rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
 							rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-						} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+						} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->mouseSpawnHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 						Vector2 pos(rect.x, rect.y);
 
 						this->player2.Reset(pos, false);
@@ -547,6 +649,13 @@ void SnakeGame::Update(float elapsedGameTime)
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
 					}
+					else if (this->player1.BodyCollides(this->bulletHitbox))
+					{
+						this->player1.RemoveBodyPart();
+						this->bulletFired = false;
+						this->bulletBelongsToPlayer = 0;
+						this->bulletSpawnTimer = 0;
+					}
 				}
 				else if (this->bulletBelongsToPlayer == 2)
 				{
@@ -558,7 +667,7 @@ void SnakeGame::Update(float elapsedGameTime)
 						{
 							rect.x = Roll(0, SCREEN_WIDTH - BODYSIZE * 2);
 							rect.y = Roll(0, SCREEN_HEIGHT - BODYSIZE);
-						} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
+						} while (rect.Intersects(this->appleHitbox) || rect.Intersects(this->mouseSpawnHitbox) || rect.Intersects(this->bulletHitbox) || player2.Collides(rect));
 						Vector2 pos(rect.x, rect.y);
 
 						this->player1.Reset(pos, false);
@@ -570,6 +679,13 @@ void SnakeGame::Update(float elapsedGameTime)
 					{
 						// Bodyshot: !
 						this->player1.RemoveBodyPart();
+						this->bulletFired = false;
+						this->bulletBelongsToPlayer = 0;
+						this->bulletSpawnTimer = 0;
+					}
+					else if (this->player2.BodyCollides(this->bulletHitbox))
+					{
+						this->player2.RemoveBodyPart();
 						this->bulletFired = false;
 						this->bulletBelongsToPlayer = 0;
 						this->bulletSpawnTimer = 0;
@@ -594,23 +710,11 @@ void SnakeGame::Draw(float elapsedGameTime)
 		if (player1.Score > 0 || player2.Score > 0)
 		{
 			if (player1.Score > player2.Score)
-			{
-				//std::string message = "Score: " + std::to_string(this->player1.Score) + " over " + std::to_string(this->player2.Score);
-
 				// Player 1 wins:!
-				this->spriteBatch->Draw(this->winnerScreen, Vector2(0, 0));
-				this->spriteBatch->DrawString("Player 1 Wins", Vector2(200, 150), this->font, Color(255, 255, 255));
-				//this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
-			}
+				this->spriteBatch->Draw(this->brownWinnerScreen, Vector2(0, 0));
 			else if (player1.Score < player2.Score)
-			{
 				// Player 2 Wins
-				//std::string message = "Score: " + std::to_string(this->player2.Score) + " over " + std::to_string(this->player1.Score);
-
-				this->spriteBatch->Draw(this->winnerScreen, Vector2(0, 0));
-				this->spriteBatch->DrawString("Player 2 Wins", Vector2(200, 150), this->font, Color(255, 255, 255));
-				//this->spriteBatch->DrawString(message.c_str(), Vector2(200, 180), this->font, Color(255, 255, 255));
-			}
+				this->spriteBatch->Draw(this->blueWinnerScreen, Vector2(0, 0));
 		}
 		else
 		{
@@ -622,17 +726,16 @@ void SnakeGame::Draw(float elapsedGameTime)
 	{
 		this->bulletSpawnTimer += elapsedGameTime;
 		if (this->bulletSpawnTimer >= 4 && this->bulletBelongsToPlayer == 0)
-		{
 			this->spriteBatch->Draw(this->bulletTexture, Vector2(this->bulletSpawnHitbox.x, this->bulletSpawnHitbox.y));
-		}
+
+		if (this->mouseSpawned)
+			this->spriteBatch->Draw(this->mouseTexture, Vector2(this->mouseSpawnHitbox.x, this->mouseSpawnHitbox.y));
 
 		if (this->appleSpawned)
 			this->spriteBatch->Draw(this->appleTexture, Vector2(this->appleHitbox.x, this->appleHitbox.y));
 
 		if (this->bulletFired)
-		{
 			this->spriteBatch->Draw(this->bulletTexture, this->bulletPosition);
-		}
 
 		// Draws the players.
 		player1.Draw(elapsedGameTime, this->spriteBatch);
@@ -662,19 +765,20 @@ void SnakeGame::Draw(float elapsedGameTime)
 // Here we clean up and releases our resources.
 void SnakeGame::Cleanup()
 {
-	
+
 	GPIOUnexport(GPIO_BUTTON);
 	GPIOUnexport(GPIO_BUTTONUP);
 	GPIOUnexport(GPIO_BUTTONDOWN);
 	GPIOUnexport(GPIO_BUTTONRIGHT);
 	GPIOUnexport(GPIO_BUTTONLEFT);
-	
+
 	// Cleans up the players variables.
 	player1.Cleanup();
 	player2.Cleanup();
 
 	SDL_FreeSurface(this->startScreen);
-	SDL_FreeSurface(this->winnerScreen);
+	SDL_FreeSurface(this->brownWinnerScreen);
+	SDL_FreeSurface(this->blueWinnerScreen);
 	
 	SDL_FreeSurface(this->bulletTexture);
 	SDL_FreeSurface(this->appleTexture);
