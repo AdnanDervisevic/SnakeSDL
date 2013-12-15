@@ -10,7 +10,7 @@ SnakeGame::SnakeGame() :
 	bulletBelongsToPlayer(0), bulletSpawnTimer(0), bulletHitbox(0, 0, 20, 20), bulletMotion(0, 0), bulletPosition(0, 0),
 	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false),
 	mouseSpawnHitbox(0, 0, 18, 18), mouseSpawnTimer(0), mouseSpawned(false), mouseNextSpawnTime(0), mouseMotion(0, 0), mousePosition(0, 0),
-	buttonTimer(0), enableButtonTimer(false)
+	buttonTimer(0), enableButtonTimer(false), buttonPresses(0), buttonReleases(0)
 {
 	backbuffer = NULL;
 	spriteBatch = NULL;
@@ -330,15 +330,23 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 
 	if (!gameStarted)
 	{
-		buttonTimer += elapsedGameTime;
+		/* Test 1 */
 
+		buttonTimer += elapsedGameTime;
 		if (buttonTimer >= 0.3)
 		{
 			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 			{
 				if (enableButtonTimer)
 				{
-					printf("Button Pushed");
+					player1.Reset(Vector2(0, 0), true);
+					player2.Reset(Vector2(0, 0), false);
+					this->bulletBelongsToPlayer = 0;
+					this->bulletSpawnTimer = 0;
+					this->bulletFired = false;
+					this->appleSpawned = false;
+					this->appleSpawnTimer = 0;
+					gameStarted = true;
 				}
 				else
 				{
@@ -347,10 +355,43 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				}
 			}
 			else
-			{
 				enableButtonTimer = false;
+		}
+
+		/*
+		Test 2
+		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
+		{
+			if (!enableButtonTimer)
+			{
+				enableButtonTimer = true;
+				buttonTimer = 0;
+				buttonPresses = 0;
+			}
+				
+			buttonPresses++;
+		}
+		else
+		if (enableButtonTimer)
+				buttonReleases++;
+
+		buttonTimer += elapsedGameTime;
+		if (enableButtonTimer && buttonTimer >= 0.3)
+		{
+			if (buttonPresses > buttonReleases)
+			{
+				// Button Pressed :!
+				player1.Reset(Vector2(0, 0), true);
+				player2.Reset(Vector2(0, 0), false);
+				this->bulletBelongsToPlayer = 0;
+				this->bulletSpawnTimer = 0;
+				this->bulletFired = false;
+				this->appleSpawned = false;
+				this->appleSpawnTimer = 0;
+				gameStarted = true;
 			}
 		}
+		*/
 	}
 	else
 	{

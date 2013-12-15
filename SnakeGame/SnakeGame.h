@@ -51,6 +51,8 @@ private:
 
 	float buttonTimer;
 	bool enableButtonTimer;
+	int buttonPresses;
+	int buttonReleases;
 
 	bool gameStarted;
 
