@@ -359,8 +359,6 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 	if (bulletFired)
 		return;
 
-	int pinValue;
-
 	if (!gameStarted)
 	{
 		if (ButtonPressed(elapsedGameTime))
@@ -376,48 +374,17 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			this->mouseSpawned = false;
 			this->mouseSpawnTimer = 0;
 			gameStarted = true;
-		}
-
-		/*
-		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
-		{
-			if (!enableButtonTimer)
-			{
-				enableButtonTimer = true;
-				buttonTimer = 0;
-				buttonReleases = 0;
-			}
-		}
-		else
-		{
-			if (enableButtonTimer)
-				buttonReleases++;
-		}
-
-		buttonTimer += elapsedGameTime;
-		if (enableButtonTimer && buttonTimer >= 0.5)
-		{
-			if (buttonReleases == 0)
-			{
-				// Button Pressed :!
-				player1.Reset(Vector2(0, 0), true);
-				player2.Reset(Vector2(0, 0), false);
-				this->bulletBelongsToPlayer = 0;
-				this->bulletSpawnTimer = 0;
-				this->bulletFired = false;
-				this->appleSpawned = false;
-				this->appleSpawnTimer = 0;
-				gameStarted = true;
-			}
-
-			enableButtonTimer = false;
-		}*/
-
-		//printf("%d\n", pinValue);
-		
+		}	
 	}
 	else
 	{
+		int pinValue;
+
+		if (ButtonPressed(elapsedGameTime) && this->bulletBelongsToPlayer > 0)
+		{
+			Fire();
+		}
+
 		/*
 		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
 		{
