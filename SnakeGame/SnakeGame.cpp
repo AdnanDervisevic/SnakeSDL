@@ -591,12 +591,14 @@ void SnakeGame::Update(float elapsedGameTime)
 			{
 				player1.Score += APPLE_SCORE;
 				player1.AddBodyPart();
+				player1.AddBodyPart();
 				this->appleSpawnTimer = 0;
 				this->appleSpawned = false;
 			}
 			else if (this->appleSpawned && player2.HeadCollides(this->appleHitbox))
 			{
 				player2.Score += APPLE_SCORE;
+				player2.AddBodyPart();
 				player2.AddBodyPart();
 				this->appleSpawnTimer = 0;
 				this->appleSpawned = false;
@@ -609,6 +611,7 @@ void SnakeGame::Update(float elapsedGameTime)
 					this->player1.Score += MOUSE_SCORE;
 					this->player1.AddBodyPart();
 					this->player1.AddBodyPart();
+					this->player1.AddBodyPart();
 					this->mouseNextSpawnTime = SnakeGame::Roll(10, 40);
 					this->mouseSpawnTimer = 0;
 					this->mouseSpawned = false;
@@ -616,6 +619,7 @@ void SnakeGame::Update(float elapsedGameTime)
 				else if (this->player2.HeadCollides(this->mouseSpawnHitbox))
 				{
 					this->player2.Score += MOUSE_SCORE;
+					this->player2.AddBodyPart();
 					this->player2.AddBodyPart();
 					this->player2.AddBodyPart();
 					this->mouseNextSpawnTime = SnakeGame::Roll(10, 40);
