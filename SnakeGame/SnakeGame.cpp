@@ -328,47 +328,14 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 
 	if (!gameStarted)
 	{
-		/* Test 1 */
-		/*
-		buttonTimer += elapsedGameTime;
-		if (buttonTimer >= 0.3)
-		{
-			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
-			{
-				if (enableButtonTimer)
-				{
-					player1.Reset(Vector2(0, 0), true);
-					player2.Reset(Vector2(0, 0), false);
-					this->bulletBelongsToPlayer = 0;
-					this->bulletSpawnTimer = 0;
-					this->bulletFired = false;
-					this->appleSpawned = false;
-					this->appleSpawnTimer = 0;
-					gameStarted = true;
-				}
-				else
-				{
-					buttonTimer = 0;
-					enableButtonTimer = true;
-				}
-			}
-			else
-				enableButtonTimer = false;
-		}
-		*/
-		/*
-		Test 2*/
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 		{
 			if (!enableButtonTimer)
 			{
 				enableButtonTimer = true;
 				buttonTimer = 0;
-				buttonPresses = 0;
 				buttonReleases = 0;
 			}
-				
-			buttonPresses++;
 		}
 		else
 		{
@@ -382,27 +349,6 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			if (buttonReleases == 0)
 			{
 				// Button Pressed :!
-				/*player1.Reset(Vector2(0, 0), true);
-				player2.Reset(Vector2(0, 0), false);
-				this->bulletBelongsToPlayer = 0;
-				this->bulletSpawnTimer = 0;
-				this->bulletFired = false;
-				this->appleSpawned = false;
-				this->appleSpawnTimer = 0;
-				gameStarted = true;
-				*/
-			}
-
-			enableButtonTimer = false;
-		}
-
-		/* Test 3*/
-		/*
-		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
-		{
-			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
-			{
 				player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
 				this->bulletBelongsToPlayer = 0;
@@ -412,7 +358,9 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				this->appleSpawnTimer = 0;
 				gameStarted = true;
 			}
-		}*/
+
+			enableButtonTimer = false;
+		}
 
 		printf("%d\n", pinValue);
 		
