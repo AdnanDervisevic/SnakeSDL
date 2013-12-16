@@ -850,7 +850,7 @@ void SnakeGame::Draw(float elapsedGameTime)
 
 		strcat(leftString, leftValue);
 
-		this->spriteBatch->DrawString(leftString, Vector2(100, 10), this->font, Color(255, 255, 255));
+		this->spriteBatch->DrawString(leftString, Vector2(100, 100), this->font, Color(255, 255, 255));
 
 		char rightString[124] = "Right: ";
 		char rightValue[32];
