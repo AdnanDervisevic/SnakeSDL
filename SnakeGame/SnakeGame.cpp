@@ -328,6 +328,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 
 	if (!gameStarted)
 	{
+
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 		{
 			if (!enableButtonTimer)
@@ -335,6 +336,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				enableButtonTimer = true;
 				buttonTimer = 0;
 				buttonReleases = 0;
+				printf("Enable timer\n");
 			}
 		}
 		else
@@ -346,8 +348,10 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 		buttonTimer += elapsedGameTime;
 		if (enableButtonTimer && buttonTimer >= 0.5)
 		{
+			printf("Game Timer\n");
 			if (buttonReleases == 0)
 			{
+				printf("Game started\n");
 				// Button Pressed :!
 				player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
@@ -362,7 +366,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			enableButtonTimer = false;
 		}
 
-		printf("%d\n", pinValue);
+		//printf("%d\n", pinValue);
 		
 	}
 	else
