@@ -62,14 +62,16 @@ int SnakeGame::Run()
 // Here we Initialize our game.
 bool SnakeGame::Initialize()
 {
+	printf("SDL init\n");
 	// Initialize the sdl.
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		return false;
 
+	printf("SDL init2\n");
 	// Create our display surface.
 	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF )) == NULL)
 		return false;
-
+	printf("TTF init\n");
 	if (TTF_Init() == -1)
 		return false;
 
