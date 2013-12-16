@@ -11,11 +11,11 @@
 #define LOW  0
 #define HIGH 1
 
-#define GPIO_BUTTON  2
-#define GPIO_BUTTONUP 27
-#define GPIO_BUTTONDOWN 7
-#define GPIO_BUTTONRIGHT 3
-#define GPIO_BUTTONLEFT 10
+#define GPIO_BUTTON  3
+#define GPIO_BUTTONUP 9
+#define GPIO_BUTTONDOWN 22
+#define GPIO_BUTTONRIGHT 2
+#define GPIO_BUTTONLEFT 17
 
 static int GPIOExport(int pin)
 {

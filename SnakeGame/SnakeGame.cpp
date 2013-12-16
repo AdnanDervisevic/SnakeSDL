@@ -10,7 +10,9 @@ SnakeGame::SnakeGame() :
 	bulletBelongsToPlayer(0), bulletSpawnTimer(0), bulletHitbox(0, 0, 20, 20), bulletMotion(0, 0), bulletPosition(0, 0),
 	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false),
 	mouseSpawnHitbox(0, 0, 18, 18), mouseSpawnTimer(0), mouseSpawned(false), mouseNextSpawnTime(0), mouseMotion(0, 0), mousePosition(0, 0),
-	buttonTimer(0), enableButtonTimer(false), buttonReleases(0)
+	buttonTimer(0), enableButtonTimer(false), buttonReleases(0),
+	buttonUpTimer(0), enableButtonUpTimer(false), buttonUpReleases(0), buttonDownTimer(0), enableButtonDownTimer(false), buttonDownReleases(0),
+	buttonLeftTimer(0), enableButtonLeftTimer(false), buttonLeftReleases(0), buttonRightTimer(0), enableButtonRightTimer(false), buttonRightReleases(0)
 {
 	backbuffer = NULL;
 	spriteBatch = NULL;
@@ -336,9 +338,9 @@ bool SnakeGame::ButtonPressed(float elapsedGameTime)
 		if (enableButtonTimer)
 			buttonReleases++;
 	}
-	printf("%d\n", pinValue);
+
 	buttonTimer += elapsedGameTime;
-	if (enableButtonTimer && buttonTimer >= 0.5)
+	if (enableButtonTimer && buttonTimer >= 0.01)
 	{
 		if (buttonReleases == 0)
 		{
@@ -381,55 +383,106 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 		int pinValue;
 
 		if (ButtonPressed(elapsedGameTime) && this->bulletBelongsToPlayer > 0)
-		{
 			Fire();
-		}
 
-		/*
+		/* UP */
 		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
 		{
-			printf("Up Check\n");
-			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
+			if (!enableButtonUpTimer)
 			{
-				player1.Turn(DIRECTION_UP);
-				printf("Turn Up\n");
+				enableButtonUpTimer = true;
+				buttonUpTimer = 0;
+				buttonUpReleases = 0;
 			}
 		}
+		else
+		{
+			if (enableButtonUpTimer)
+				buttonUpReleases++;
+		}
+
+		buttonUpTimer += elapsedGameTime;
+		if (enableButtonUpTimer && buttonUpTimer >= 0.35)
+		{
+			if (buttonUpReleases == 0)
+				player1.Turn(DIRECTION_UP);
+
+			enableButtonUpTimer = false;
+		}
+
+		/* DOWN */
 		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 		{
-			printf("Down Check\n");
-			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
+			if (!enableButtonDownTimer)
 			{
-				player1.Turn(DIRECTION_DOWN);
-				printf("Turn Down\n");
+				enableButtonDownTimer = true;
+				buttonDownTimer = 0;
+				buttonDownReleases = 0;
 			}
 		}
-
-		printf("%d\n", pinValue);
-
-		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
+		else
 		{
-			printf("Right Check\n");
-			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
-			{
-				player1.Turn(DIRECTION_RIGHT);
-				printf("Turn Right\n");
-			}
+			if (enableButtonDownTimer)
+				buttonDownReleases++;
 		}
 
+		buttonDownTimer += elapsedGameTime;
+		if (enableButtonDownTimer && buttonDownTimer >= 0.35)
+		{
+			if (buttonDownReleases == 0)
+				player1.Turn(DIRECTION_DOWN);
+
+			enableButtonDownTimer = false;
+		}
+
+		/* LEFT */
 		if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
 		{
-			printf("Left Check\n");
-			usleep(10000);
-			if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
+			if (!enableButtonLeftTimer)
 			{
-				player1.Turn(DIRECTION_LEFT);
-				printf("Turn Left\n");
+				enableButtonLeftTimer = true;
+				buttonLeftTimer = 0;
+				buttonLeftReleases = 0;
 			}
-		}*/
+		}
+		else
+		{
+			if (enableButtonLeftTimer)
+				buttonLeftReleases++;
+		}
+
+		buttonLeftTimer += elapsedGameTime;
+		if (enableButtonLeftTimer && buttonLeftTimer >= 0.35)
+		{
+			if (buttonLeftReleases == 0)
+				player1.Turn(DIRECTION_LEFT);
+			enableButtonLeftTimer = false;
+		}
+
+		/* RIGHT */
+		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
+		{
+			if (!enableButtonRightTimer)
+			{
+				enableButtonRightTimer = true;
+				buttonRightTimer = 0;
+				buttonRightReleases = 0;
+			}
+		}
+		else
+		{
+			if (enableButtonRightTimer)
+				buttonRightReleases++;
+		}
+
+		buttonRightTimer += elapsedGameTime;
+		if (enableButtonRightTimer && buttonRightTimer >= 0.35)
+		{
+			if (buttonRightReleases == 0)
+				player1.Turn(DIRECTION_RIGHT);
+
+			enableButtonRightTimer = false;
+		}
 	}
 }
 

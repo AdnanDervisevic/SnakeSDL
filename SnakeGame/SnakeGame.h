@@ -56,6 +56,22 @@ private:
 	bool enableButtonTimer;
 	int buttonReleases;
 
+	float buttonUpTimer;
+	bool enableButtonUpTimer;
+	int buttonUpReleases;
+
+	float buttonDownTimer;
+	bool enableButtonDownTimer;
+	int buttonDownReleases;
+
+	float buttonLeftTimer;
+	bool enableButtonLeftTimer;
+	int buttonLeftReleases;
+
+	float buttonRightTimer;
+	bool enableButtonRightTimer;
+	int buttonRightReleases;
+
 	bool gameStarted;
 
 	SDL_Surface* bulletTexture;
