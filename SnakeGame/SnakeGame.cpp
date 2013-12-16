@@ -4,6 +4,8 @@
 #include <cstring>
 #include <stdio.h>
 
+int left, right, up, down;
+
 // Creates a new Snake object.
 SnakeGame::SnakeGame() :
 	bulletSpawnHitbox(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 - 10, 20, 20),
@@ -400,7 +402,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			if (enableButtonUpTimer)
 				buttonUpReleases++;
 		}
-
+		up = pinValue;
 		buttonUpTimer += elapsedGameTime;
 		if (enableButtonUpTimer && buttonUpTimer >= 0.35)
 		{
@@ -425,7 +427,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			if (enableButtonDownTimer)
 				buttonDownReleases++;
 		}
-
+		down = pinValue;
 		buttonDownTimer += elapsedGameTime;
 		if (enableButtonDownTimer && buttonDownTimer >= 0.35)
 		{
@@ -450,7 +452,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			if (enableButtonLeftTimer)
 				buttonLeftReleases++;
 		}
-
+		left = pinValue;
 		buttonLeftTimer += elapsedGameTime;
 		if (enableButtonLeftTimer && buttonLeftTimer >= 0.35)
 		{
@@ -474,7 +476,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			if (enableButtonRightTimer)
 				buttonRightReleases++;
 		}
-
+		right = pinValue;
 		buttonRightTimer += elapsedGameTime;
 		if (enableButtonRightTimer && buttonRightTimer >= 0.35)
 		{
@@ -840,6 +842,39 @@ void SnakeGame::Draw(float elapsedGameTime)
 		
 		this->spriteBatch->DrawString(brownScoreString, Vector2(2, 2), this->font, Color(255, 255, 255));
 		this->spriteBatch->DrawString(blueScoreString, Vector2(2, SCREEN_HEIGHT - 22), this->font, Color(255, 255, 255));
+
+		//Debug
+		char leftString[124] = "Left: ";
+		char leftValue[32];
+		sprintf(leftValue, "%d", left);
+
+		strcat(leftString, leftValue);
+
+		this->spriteBatch->DrawString(leftString, Vector2(100, 10), this->font, Color(255, 255, 255));
+
+		char rightString[124] = "Right: ";
+		char rightValue[32];
+		sprintf(rightValue, "%d", right);
+
+		strcat(rightString, rightValue);
+
+		this->spriteBatch->DrawString(rightString, Vector2(200, 100), this->font, Color(255, 255, 255));
+
+		char downString[124] = "Down: ";
+		char downValue[32];
+		sprintf(downValue, "%d", down);
+
+		strcat(downString, downValue);
+
+		this->spriteBatch->DrawString(downString, Vector2(300, 100), this->font, Color(255, 255, 255));
+
+		char upString[124] = "Up: ";
+		char upValue[32];
+		sprintf(upValue, "%d", up);
+
+		strcat(upString, upValue);
+
+		this->spriteBatch->DrawString(upString, Vector2(400, 100), this->font, Color(255, 255, 255));
 	}
 
 	// Shows the backbuffer.
