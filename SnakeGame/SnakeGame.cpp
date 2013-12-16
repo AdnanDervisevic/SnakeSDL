@@ -69,7 +69,7 @@ bool SnakeGame::Initialize()
 		return false;
 
 	// Create our display surface.
-	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF )) == NULL)
+	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN )) == NULL)
 		return false;
 
 	if (TTF_Init() == -1)
