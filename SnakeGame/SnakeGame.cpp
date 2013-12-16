@@ -365,13 +365,16 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				enableButtonTimer = true;
 				buttonTimer = 0;
 				buttonPresses = 0;
+				buttonReleases = 0;
 			}
 				
 			buttonPresses++;
 		}
 		else
-		if (enableButtonTimer)
+		{
+			if (enableButtonTimer)
 				buttonReleases++;
+		}
 
 		buttonTimer += elapsedGameTime;
 		if (enableButtonTimer && buttonTimer >= 0.3)
