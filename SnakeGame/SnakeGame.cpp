@@ -267,8 +267,6 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	}
 	else
 	{
-		printf("Event Update\n");
-
 		// Check if we want to quit
 		switch (event->type)
 		{
@@ -331,7 +329,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 	if (!gameStarted)
 	{
 		/* Test 1 */
-
+		/*
 		buttonTimer += elapsedGameTime;
 		if (buttonTimer >= 0.3)
 		{
@@ -357,9 +355,9 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			else
 				enableButtonTimer = false;
 		}
-
+		*/
 		/*
-		Test 2
+		Test 2*/
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 		{
 			if (!enableButtonTimer)
@@ -391,7 +389,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				gameStarted = true;
 			}
 		}
-		*/
+		
 	}
 	else
 	{
