@@ -336,7 +336,7 @@ bool SnakeGame::ButtonPressed(float elapsedGameTime)
 		if (enableButtonTimer)
 			buttonReleases++;
 	}
-
+	printf("%d\n", pinValue);
 	buttonTimer += elapsedGameTime;
 	if (enableButtonTimer && buttonTimer >= 0.5)
 	{
