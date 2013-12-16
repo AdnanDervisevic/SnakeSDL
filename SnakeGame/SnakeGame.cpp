@@ -382,7 +382,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			if (buttonReleases == 0)
 			{
 				// Button Pressed :!
-				player1.Reset(Vector2(0, 0), true);
+				/*player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
 				this->bulletBelongsToPlayer = 0;
 				this->bulletSpawnTimer = 0;
@@ -390,6 +390,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				this->appleSpawned = false;
 				this->appleSpawnTimer = 0;
 				gameStarted = true;
+				*/
 			}
 
 			enableButtonTimer = false;
