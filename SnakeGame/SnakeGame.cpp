@@ -62,16 +62,14 @@ int SnakeGame::Run()
 // Here we Initialize our game.
 bool SnakeGame::Initialize()
 {
-	printf("SDL init\n");
 	// Initialize the sdl.
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		return false;
 
-	printf("SDL init2\n");
 	// Create our display surface.
 	if ((backbuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_HWSURFACE | SDL_DOUBLEBUF )) == NULL)
 		return false;
-	printf("TTF init\n");
+
 	if (TTF_Init() == -1)
 		return false;
 
@@ -80,33 +78,33 @@ bool SnakeGame::Initialize()
 
 	// Change our window title
 	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
-	printf("1\n");
+
 	// Load player1.
 	if (player1.Initialize(Vector2(200, 0), Texture::Load("Assets/playerTexture.png"), Texture::Load("Assets/playerTexture.png"), Texture::Load("Assets/playerTexture.png")) == false)
 		return false;
-	printf("2\n");
+
 	// Load player2
 	if (player2.Initialize(Vector2(200, SCREEN_HEIGHT - BODYSIZE), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png")) == false)
 		return false;
-	printf("3\n");
+
 	if ((this->bulletTexture = Texture::Load("Assets/bullet.png")) == NULL)
 		return false;
-	printf("4\n");
+
 	if ((this->appleTexture = Texture::Load("Assets/apple.png")) == NULL)
 		return false;
-	printf("5\n");
+
 	if ((this->startScreen = Texture::Load("Assets/startScreen.png")) == NULL)
 		return false;
-	printf("6\n");
+
 	if ((this->brownWinnerScreen = Texture::Load("Assets/brownWinnerScreen.png")) == NULL)
 		return false;
-	printf("7\n");
+
 	if ((this->blueWinnerScreen = Texture::Load("Assets/blueWinnerScreen.png")) == NULL)
 		return false;
-	printf("8\n");
+
 	if ((this->mouseTexture = Texture::Load("Assets/mouse.png")) == NULL)
 		return false;
-	printf("9\n");
+
 	// Loads a font using the SpriteFont helper.
 	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
@@ -320,6 +318,39 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	}
 }
 
+bool SnakeGame::ButtonPressed()
+{
+	if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
+	{
+		if (!enableButtonTimer)
+		{
+			enableButtonTimer = true;
+			buttonTimer = 0;
+			buttonReleases = 0;
+		}
+	}
+	else
+	{
+		if (enableButtonTimer)
+			buttonReleases++;
+	}
+
+	buttonTimer += elapsedGameTime;
+	if (enableButtonTimer && buttonTimer >= 0.5)
+	{
+		if (buttonReleases == 0)
+		{
+			// Button Pressed :!
+			enableButtonTimer = false;
+			return true;
+		}
+
+		enableButtonTimer = false;
+	}
+
+	return false;
+}
+
 // Here we handle all the input not coming from the SDL.
 void SnakeGame::HandleInput(float elapsedGameTime)
 {
@@ -330,7 +361,22 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 
 	if (!gameStarted)
 	{
+		if (ButtonPressed())
+		{
+			// Button Pressed :!
+			player1.Reset(Vector2(0, 0), true);
+			player2.Reset(Vector2(0, 0), false);
+			this->bulletBelongsToPlayer = 0;
+			this->bulletSpawnTimer = 0;
+			this->bulletFired = false;
+			this->appleSpawned = false;
+			this->appleSpawnTimer = 0;
+			this->mouseSpawned = false;
+			this->mouseSpawnTimer = 0;
+			gameStarted = true;
+		}
 
+		/*
 		if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 		{
 			if (!enableButtonTimer)
@@ -338,7 +384,6 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				enableButtonTimer = true;
 				buttonTimer = 0;
 				buttonReleases = 0;
-				printf("Enable timer\n");
 			}
 		}
 		else
@@ -350,10 +395,8 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 		buttonTimer += elapsedGameTime;
 		if (enableButtonTimer && buttonTimer >= 0.5)
 		{
-			printf("Game Timer\n");
 			if (buttonReleases == 0)
 			{
-				printf("Game started\n");
 				// Button Pressed :!
 				player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
@@ -366,7 +409,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 			}
 
 			enableButtonTimer = false;
-		}
+		}*/
 
 		//printf("%d\n", pinValue);
 		

@@ -34,6 +34,9 @@ public:
 	}
 
 private:
+
+	bool ButtonPressed();
+
 	Uint32 currentTicks;
 	Uint32 oldTicks;
 	bool running;
