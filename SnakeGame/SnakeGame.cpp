@@ -78,33 +78,33 @@ bool SnakeGame::Initialize()
 
 	// Change our window title
 	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
-
+	printf("1\n");
 	// Load player1.
 	if (player1.Initialize(Vector2(200, 0), Texture::Load("Assets/playerTexture.png"), Texture::Load("Assets/playerTexture.png"), Texture::Load("Assets/playerTexture.png")) == false)
 		return false;
-
+	printf("2\n");
 	// Load player2
 	if (player2.Initialize(Vector2(200, SCREEN_HEIGHT - BODYSIZE), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png"), Texture::Load("Assets/player2Texture.png")) == false)
 		return false;
-
+	printf("3\n");
 	if ((this->bulletTexture = Texture::Load("Assets/bullet.png")) == NULL)
 		return false;
-
+	printf("4\n");
 	if ((this->appleTexture = Texture::Load("Assets/apple.png")) == NULL)
 		return false;
-
+	printf("5\n");
 	if ((this->startScreen = Texture::Load("Assets/startScreen.png")) == NULL)
 		return false;
-
+	printf("6\n");
 	if ((this->brownWinnerScreen = Texture::Load("Assets/brownWinnerScreen.png")) == NULL)
 		return false;
-
+	printf("7\n");
 	if ((this->blueWinnerScreen = Texture::Load("Assets/blueWinnerScreen.png")) == NULL)
 		return false;
-
+	printf("8\n");
 	if ((this->mouseTexture = Texture::Load("Assets/mouse.png")) == NULL)
 		return false;
-
+	printf("9\n");
 	// Loads a font using the SpriteFont helper.
 	if ((font = SpriteFont::Load("Assets/DolceVita.ttf", 22)) == NULL)
 		return false;
