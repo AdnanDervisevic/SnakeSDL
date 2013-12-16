@@ -389,6 +389,8 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				gameStarted = true;
 			}
 		}
+
+		printf("%d\n", pinValue);
 		
 	}
 	else
