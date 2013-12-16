@@ -318,7 +318,7 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 	}
 }
 
-bool SnakeGame::ButtonPressed()
+bool SnakeGame::ButtonPressed(float elapsedGameTime)
 {
 	int pinValue;
 
@@ -363,7 +363,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 
 	if (!gameStarted)
 	{
-		if (ButtonPressed())
+		if (ButtonPressed(elapsedGameTime))
 		{
 			// Button Pressed :!
 			player1.Reset(Vector2(0, 0), true);

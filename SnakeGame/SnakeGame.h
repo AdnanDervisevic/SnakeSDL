@@ -35,7 +35,7 @@ public:
 
 private:
 
-	bool ButtonPressed();
+	bool ButtonPressed(float elapsedGameTime);
 
 	Uint32 currentTicks;
 	Uint32 oldTicks;
