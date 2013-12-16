@@ -10,7 +10,7 @@ SnakeGame::SnakeGame() :
 	bulletBelongsToPlayer(0), bulletSpawnTimer(0), bulletHitbox(0, 0, 20, 20), bulletMotion(0, 0), bulletPosition(0, 0),
 	appleHitbox(0, 0, 20, 20), appleSpawnTimer(0), appleSpawned(false),
 	mouseSpawnHitbox(0, 0, 18, 18), mouseSpawnTimer(0), mouseSpawned(false), mouseNextSpawnTime(0), mouseMotion(0, 0), mousePosition(0, 0),
-	buttonTimer(0), enableButtonTimer(false), buttonPresses(0), buttonReleases(0)
+	buttonTimer(0), enableButtonTimer(false), buttonReleases(0)
 {
 	backbuffer = NULL;
 	spriteBatch = NULL;
@@ -784,7 +784,7 @@ void SnakeGame::Draw(float elapsedGameTime)
 // Here we clean up and releases our resources.
 void SnakeGame::Cleanup()
 {
-
+	
 	GPIOUnexport(GPIO_BUTTON);
 	GPIOUnexport(GPIO_BUTTONUP);
 	GPIOUnexport(GPIO_BUTTONDOWN);

@@ -1,37 +1,12 @@
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
-Event Update
+SDL init
+SDL init2
+TTF init
+1
+2
+3
+4
+5
+6
+7
+8
+9
