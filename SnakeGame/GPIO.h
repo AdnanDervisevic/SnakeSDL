@@ -11,7 +11,7 @@
 #define LOW  0
 #define HIGH 1
 
-#define GPIO_BUTTON  4
+#define GPIO_BUTTON  2
 #define GPIO_BUTTONUP 27
 #define GPIO_BUTTONDOWN 7
 #define GPIO_BUTTONRIGHT 3
