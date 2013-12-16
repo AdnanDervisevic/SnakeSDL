@@ -374,7 +374,7 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				buttonReleases++;
 
 		buttonTimer += elapsedGameTime;
-		if (enableButtonTimer && buttonTimer >= 0.2)
+		if (enableButtonTimer && buttonTimer >= 0.3)
 		{
 			if (buttonReleases == 0)
 			{
@@ -388,6 +388,8 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 				this->appleSpawnTimer = 0;
 				gameStarted = true;
 			}
+
+			enableButtonTimer = false;
 		}
 
 		/* Test 3*/
