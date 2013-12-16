@@ -320,6 +320,8 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 
 bool SnakeGame::ButtonPressed()
 {
+	int pinValue;
+
 	if ((pinValue = GPIORead(GPIO_BUTTON)) == 0)
 	{
 		if (!enableButtonTimer)
