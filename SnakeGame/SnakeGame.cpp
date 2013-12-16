@@ -392,13 +392,13 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 	}
 	else
 	{
+		if (ButtonPressed(elapsedGameTime) && this->bulletBelongsToPlayer > 0)
+			Fire();
+
 		if (enableGPIO)
 		{
 
 			int pinValue;
-
-			if (ButtonPressed(elapsedGameTime) && this->bulletBelongsToPlayer > 0)
-				Fire();
 
 			/* UP */
 			if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
