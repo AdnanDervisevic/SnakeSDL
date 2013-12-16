@@ -377,19 +377,20 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 		}
 
 		buttonTimer += elapsedGameTime;
-		if (enableButtonTimer && buttonTimer >= 0.3)
+		if (enableButtonTimer && buttonTimer >= 0.4)
 		{
 			if (buttonReleases == 0)
 			{
 				// Button Pressed :!
-				player1.Reset(Vector2(0, 0), true);
+				printf("started\n");
+				/*player1.Reset(Vector2(0, 0), true);
 				player2.Reset(Vector2(0, 0), false);
 				this->bulletBelongsToPlayer = 0;
 				this->bulletSpawnTimer = 0;
 				this->bulletFired = false;
 				this->appleSpawned = false;
 				this->appleSpawnTimer = 0;
-				gameStarted = true;
+				gameStarted = true;*/
 			}
 
 			enableButtonTimer = false;
