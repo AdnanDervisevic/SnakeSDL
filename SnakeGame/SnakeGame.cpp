@@ -14,7 +14,8 @@ SnakeGame::SnakeGame() :
 	mouseSpawnHitbox(0, 0, 18, 18), mouseSpawnTimer(0), mouseSpawned(false), mouseNextSpawnTime(0), mouseMotion(0, 0), mousePosition(0, 0),
 	buttonTimer(0), enableButtonTimer(false), buttonReleases(0),
 	buttonUpTimer(0), enableButtonUpTimer(false), buttonUpReleases(0), buttonDownTimer(0), enableButtonDownTimer(false), buttonDownReleases(0),
-	buttonLeftTimer(0), enableButtonLeftTimer(false), buttonLeftReleases(0), buttonRightTimer(0), enableButtonRightTimer(false), buttonRightReleases(0)
+	buttonLeftTimer(0), enableButtonLeftTimer(false), buttonLeftReleases(0), buttonRightTimer(0), enableButtonRightTimer(false), buttonRightReleases(0),
+	drawDebug(false), enableGPIO(false)
 {
 	backbuffer = NULL;
 	spriteBatch = NULL;
@@ -318,6 +319,15 @@ void SnakeGame::HandleSDLInput(SDL_Event* event)
 					player2.Turn(DIRECTION_RIGHT);
 			}
 			break;
+
+		case SDL_JOYBUTTONDOWN:
+			if (stick != NULL)
+			{
+				if (SDL_JoystickGetButton(stick, 6) == 1)
+					drawDebug = !drawDebug;
+				else if (SDL_JoystickGetButton(stick, 7) == 1)
+					enableGPIO = !enableGPIO;
+			}
 		}
 	}
 }
@@ -382,108 +392,112 @@ void SnakeGame::HandleInput(float elapsedGameTime)
 	}
 	else
 	{
-		int pinValue;
-
-		if (ButtonPressed(elapsedGameTime) && this->bulletBelongsToPlayer > 0)
-			Fire();
-
-		/* UP */
-		if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
+		if (enableGPIO)
 		{
-			if (!enableButtonUpTimer)
+
+			int pinValue;
+
+			if (ButtonPressed(elapsedGameTime) && this->bulletBelongsToPlayer > 0)
+				Fire();
+
+			/* UP */
+			if ((pinValue = GPIORead(GPIO_BUTTONUP)) == 0)
 			{
-				enableButtonUpTimer = true;
-				buttonUpTimer = 0;
-				buttonUpReleases = 0;
+				if (!enableButtonUpTimer)
+				{
+					enableButtonUpTimer = true;
+					buttonUpTimer = 0;
+					buttonUpReleases = 0;
+				}
 			}
-		}
-		else
-		{
-			if (enableButtonUpTimer)
-				buttonUpReleases++;
-		}
-		up = pinValue;
-		buttonUpTimer += elapsedGameTime;
-		if (enableButtonUpTimer && buttonUpTimer >= 0.35)
-		{
-			if (buttonUpReleases == 0)
-				player1.Turn(DIRECTION_UP);
-
-			enableButtonUpTimer = false;
-		}
-
-		/* DOWN */
-		if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
-		{
-			if (!enableButtonDownTimer)
+			else
 			{
-				enableButtonDownTimer = true;
-				buttonDownTimer = 0;
-				buttonDownReleases = 0;
+				if (enableButtonUpTimer)
+					buttonUpReleases++;
 			}
-		}
-		else
-		{
-			if (enableButtonDownTimer)
-				buttonDownReleases++;
-		}
-		down = pinValue;
-		buttonDownTimer += elapsedGameTime;
-		if (enableButtonDownTimer && buttonDownTimer >= 0.35)
-		{
-			if (buttonDownReleases == 0)
-				player1.Turn(DIRECTION_DOWN);
-
-			enableButtonDownTimer = false;
-		}
-
-		/* LEFT */
-		if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
-		{
-			if (!enableButtonLeftTimer)
+			up = pinValue;
+			buttonUpTimer += elapsedGameTime;
+			if (enableButtonUpTimer && buttonUpTimer >= 0.35)
 			{
-				enableButtonLeftTimer = true;
-				buttonLeftTimer = 0;
-				buttonLeftReleases = 0;
-			}
-		}
-		else
-		{
-			if (enableButtonLeftTimer)
-				buttonLeftReleases++;
-		}
-		left = pinValue;
-		buttonLeftTimer += elapsedGameTime;
-		if (enableButtonLeftTimer && buttonLeftTimer >= 0.35)
-		{
-			if (buttonLeftReleases == 0)
-				player1.Turn(DIRECTION_LEFT);
-			enableButtonLeftTimer = false;
-		}
+				if (buttonUpReleases == 0)
+					player1.Turn(DIRECTION_UP);
 
-		/* RIGHT */
-		if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
-		{
-			if (!enableButtonRightTimer)
+				enableButtonUpTimer = false;
+			}
+
+			/* DOWN */
+			if ((pinValue = GPIORead(GPIO_BUTTONDOWN)) == 0)
 			{
-				enableButtonRightTimer = true;
-				buttonRightTimer = 0;
-				buttonRightReleases = 0;
+				if (!enableButtonDownTimer)
+				{
+					enableButtonDownTimer = true;
+					buttonDownTimer = 0;
+					buttonDownReleases = 0;
+				}
 			}
-		}
-		else
-		{
-			if (enableButtonRightTimer)
-				buttonRightReleases++;
-		}
-		right = pinValue;
-		buttonRightTimer += elapsedGameTime;
-		if (enableButtonRightTimer && buttonRightTimer >= 0.35)
-		{
-			if (buttonRightReleases == 0)
-				player1.Turn(DIRECTION_RIGHT);
+			else
+			{
+				if (enableButtonDownTimer)
+					buttonDownReleases++;
+			}
+			down = pinValue;
+			buttonDownTimer += elapsedGameTime;
+			if (enableButtonDownTimer && buttonDownTimer >= 0.35)
+			{
+				if (buttonDownReleases == 0)
+					player1.Turn(DIRECTION_DOWN);
 
-			enableButtonRightTimer = false;
+				enableButtonDownTimer = false;
+			}
+
+			/* LEFT */
+			if ((pinValue = GPIORead(GPIO_BUTTONLEFT)) == 0)
+			{
+				if (!enableButtonLeftTimer)
+				{
+					enableButtonLeftTimer = true;
+					buttonLeftTimer = 0;
+					buttonLeftReleases = 0;
+				}
+			}
+			else
+			{
+				if (enableButtonLeftTimer)
+					buttonLeftReleases++;
+			}
+			left = pinValue;
+			buttonLeftTimer += elapsedGameTime;
+			if (enableButtonLeftTimer && buttonLeftTimer >= 0.35)
+			{
+				if (buttonLeftReleases == 0)
+					player1.Turn(DIRECTION_LEFT);
+				enableButtonLeftTimer = false;
+			}
+
+			/* RIGHT */
+			if ((pinValue = GPIORead(GPIO_BUTTONRIGHT)) == 0)
+			{
+				if (!enableButtonRightTimer)
+				{
+					enableButtonRightTimer = true;
+					buttonRightTimer = 0;
+					buttonRightReleases = 0;
+				}
+			}
+			else
+			{
+				if (enableButtonRightTimer)
+					buttonRightReleases++;
+			}
+			right = pinValue;
+			buttonRightTimer += elapsedGameTime;
+			if (enableButtonRightTimer && buttonRightTimer >= 0.35)
+			{
+				if (buttonRightReleases == 0)
+					player1.Turn(DIRECTION_RIGHT);
+
+				enableButtonRightTimer = false;
+			}
 		}
 	}
 }
@@ -844,37 +858,40 @@ void SnakeGame::Draw(float elapsedGameTime)
 		this->spriteBatch->DrawString(blueScoreString, Vector2(2, SCREEN_HEIGHT - 22), this->font, Color(255, 255, 255));
 
 		//Debug
-		char leftString[124] = "Left: ";
-		char leftValue[32];
-		sprintf(leftValue, "%d", left);
+		if (drawDebug)
+		{
+			char leftString[124] = "Left: ";
+			char leftValue[32];
+			sprintf(leftValue, "%d", left);
 
-		strcat(leftString, leftValue);
+			strcat(leftString, leftValue);
 
-		this->spriteBatch->DrawString(leftString, Vector2(100, 100), this->font, Color(255, 255, 255));
+			this->spriteBatch->DrawString(leftString, Vector2(100, 100), this->font, Color(255, 255, 255));
 
-		char rightString[124] = "Right: ";
-		char rightValue[32];
-		sprintf(rightValue, "%d", right);
+			char rightString[124] = "Right: ";
+			char rightValue[32];
+			sprintf(rightValue, "%d", right);
 
-		strcat(rightString, rightValue);
+			strcat(rightString, rightValue);
 
-		this->spriteBatch->DrawString(rightString, Vector2(200, 100), this->font, Color(255, 255, 255));
+			this->spriteBatch->DrawString(rightString, Vector2(200, 100), this->font, Color(255, 255, 255));
 
-		char downString[124] = "Down: ";
-		char downValue[32];
-		sprintf(downValue, "%d", down);
+			char downString[124] = "Down: ";
+			char downValue[32];
+			sprintf(downValue, "%d", down);
 
-		strcat(downString, downValue);
+			strcat(downString, downValue);
 
-		this->spriteBatch->DrawString(downString, Vector2(300, 100), this->font, Color(255, 255, 255));
+			this->spriteBatch->DrawString(downString, Vector2(300, 100), this->font, Color(255, 255, 255));
 
-		char upString[124] = "Up: ";
-		char upValue[32];
-		sprintf(upValue, "%d", up);
+			char upString[124] = "Up: ";
+			char upValue[32];
+			sprintf(upValue, "%d", up);
 
-		strcat(upString, upValue);
+			strcat(upString, upValue);
 
-		this->spriteBatch->DrawString(upString, Vector2(400, 100), this->font, Color(255, 255, 255));
+			this->spriteBatch->DrawString(upString, Vector2(400, 100), this->font, Color(255, 255, 255));
+		}
 	}
 
 	// Shows the backbuffer.

@@ -73,6 +73,8 @@ private:
 	int buttonRightReleases;
 
 	bool gameStarted;
+	bool drawDebug;
+	bool enableGPIO;
 
 	SDL_Surface* bulletTexture;
 	Rectangle bulletSpawnHitbox;
